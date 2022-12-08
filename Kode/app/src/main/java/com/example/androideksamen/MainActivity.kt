@@ -17,6 +17,9 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.net.URL
 
+// Global variable imports
+import com.example.androideksamen.UserSettings.Settings
+
 class MainActivity : AppCompatActivity() {
 
 //    lateinit var allData: ArrayList<RecipeData>
@@ -32,7 +35,8 @@ class MainActivity : AppCompatActivity() {
         val settingsBtn = findViewById<Button>(R.id.settings_btn)
         val recipeRecyclerView = findViewById<RecyclerView>(R.id.recipeRecyclerView)
         var userInput: String
-
+        //Access to global settings variables here !!
+        println(Settings)
 
         // Button onClick START
         searchBtn.setOnClickListener{
