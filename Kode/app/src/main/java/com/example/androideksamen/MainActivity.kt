@@ -50,11 +50,6 @@ class MainActivity : AppCompatActivity() {
         }
         // Button onclick END
 
-//        GlobalScope.launch(Dispatchers.Main) {
-//            allData = downloadRecipes("chicken")
-//            recipeRecyclerView.adapter = ItemAdapter(allData)
-//        }
-
     }
 
     fun setAdapter(view: RecyclerView, data: ArrayList<RecipeData>){
