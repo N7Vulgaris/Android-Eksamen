@@ -6,6 +6,9 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -18,27 +21,31 @@ import java.net.URL
 import com.example.androideksamen.UserSettings.Settings
 
 class MainActivity : AppCompatActivity() {
+
+//    lateinit var allData: ArrayList<RecipeData>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        var allRecipeData = ArrayList<RecipeData>()
         val searchBtn = findViewById<Button>(R.id.search_btn)
         val searchInput = findViewById<EditText>(R.id.search_input)
         val searchHistoryBtn = findViewById<Button>(R.id.search_history_btn)
         val settingsBtn = findViewById<Button>(R.id.settings_btn)
+        val recipeRecyclerView = findViewById<RecyclerView>(R.id.recipeRecyclerView)
         var userInput: String
         //Access to global settings variables here !!
         println(Settings)
 
         // Button onClick START
         searchBtn.setOnClickListener{
-            userInput = searchInput.text.toString()
             GlobalScope.launch(Dispatchers.Main) {
-                downloadRecipes(userInput)
+                userInput = searchInput.text.toString()
+                allRecipeData = downloadRecipes(userInput)
+                setAdapter(recipeRecyclerView, allRecipeData)
             }
-            Log.i("testing", "test user input: "+ userInput)
         }
-
         searchHistoryBtn.setOnClickListener {
             startActivity(Intent(applicationContext, SearchHistoryActivity::class.java))
         }
@@ -47,6 +54,19 @@ class MainActivity : AppCompatActivity() {
         }
         // Button onclick END
 
+//        GlobalScope.launch(Dispatchers.Main) {
+//            allData = downloadRecipes("chicken")
+//            recipeRecyclerView.adapter = ItemAdapter(allData)
+//        }
+
+    }
+
+    fun setAdapter(view: RecyclerView, data: ArrayList<RecipeData>){
+            val adapter = ItemAdapter(data)
+            val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(applicationContext)
+            view.layoutManager = layoutManager
+            view.itemAnimator = DefaultItemAnimator()
+            view.adapter = adapter
     }
 
     suspend fun downloadRecipes(userInput: String): ArrayList<RecipeData>{
@@ -65,7 +85,7 @@ class MainActivity : AppCompatActivity() {
                 val assetItem = recipeDataArray.get(recipeNr)
                 val recipe = (assetItem as JSONObject).get("recipe")
                 dataItem.recipeName = (recipe as JSONObject).getString("label")
-                dataItem.yield = (recipe as JSONObject).getString("yield")
+//                dataItem.yield = (recipe as JSONObject).getString("yield")
 
                 allData.add(dataItem)
             }
@@ -74,7 +94,7 @@ class MainActivity : AppCompatActivity() {
 
         allData.forEach { recipe ->
             Log.i("testing", "test: " + recipe.recipeName)
-            Log.i("testing", "test: " + recipe.yield)
+//            Log.i("testing", "test: " + recipe.yield)
         }
         return allData
     }

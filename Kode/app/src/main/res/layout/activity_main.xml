@@ -53,7 +53,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+        android:id="@+id/recipeRecyclerView"
         android:layout_width="409dp"
         android:layout_height="558dp"
         app:layout_constraintBottom_toBottomOf="parent"

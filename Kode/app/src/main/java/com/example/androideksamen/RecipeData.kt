@@ -6,6 +6,6 @@ class RecipeData {
 
 //    var recipeImage: Bitmap? = null
     var recipeName: String? = null
-    var yield: String? = null
+//    var yield: String? = null
 
 }
