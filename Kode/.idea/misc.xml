@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../../layout/custom_preview.xml" value="0.1" />
         <entry key="..\:/Users/Simen/Desktop/AndroidEksamen/Kode/app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="..\:/Users/Simen/Desktop/AndroidEksamen/Kode/app/src/main/res/layout/activity_search_history.xml" value="0.184375" />
         <entry key="..\:/Users/Simen/Desktop/AndroidEksamen/Kode/app/src/main/res/layout/activity_settings.xml" value="0.16" />
@@ -13,7 +14,7 @@
         <entry key="app/src/main/res/drawable/input.xml" value="0.1215" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.20213470458984378" />
         <entry key="app/src/main/res/layout/activity_search_history.xml" value="0.22083333333333333" />
-        <entry key="app/src/main/res/layout/activity_settings.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_settings.xml" value="0.25" />
       </map>
     </option>
   </component>

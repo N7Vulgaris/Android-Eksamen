@@ -14,6 +14,9 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.net.URL
 
+// Global variable imports
+import com.example.androideksamen.UserSettings.Settings
+
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,7 +27,8 @@ class MainActivity : AppCompatActivity() {
         val searchHistoryBtn = findViewById<Button>(R.id.search_history_btn)
         val settingsBtn = findViewById<Button>(R.id.settings_btn)
         var userInput: String
-
+        //Access to global settings variables here !!
+        println(Settings)
 
         // Button onClick START
         searchBtn.setOnClickListener{
