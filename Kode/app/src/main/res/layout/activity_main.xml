@@ -11,53 +11,64 @@
         android:id="@+id/search_history_btn"
         android:layout_width="100dp"
         android:layout_height="70dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="16dp"
         android:backgroundTint="#EEEEEE"
         android:text="Search History"
         android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.051"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.024" />
 
     <Button
         android:id="@+id/settings_btn"
         android:layout_width="120dp"
         android:layout_height="70dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="644dp"
         android:backgroundTint="#EEEEEE"
         android:text="Settings"
         android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.945"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.024" />
 
     <Button
         android:id="@+id/search_btn"
         android:layout_width="120dp"
         android:layout_height="70dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="572dp"
         android:backgroundTint="#EEEEEE"
         android:text="Search"
         android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.945"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.154" />
 
     <EditText
         android:id="@+id/search_input"
-        android:layout_width="242dp"
+        android:layout_width="230dp"
         android:layout_height="70dp"
-        android:layout_marginTop="92dp"
+        android:background="@drawable/input"
         android:text="Search for a recipe..."
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.088"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.154" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recipeRecyclerView"
-        android:layout_width="409dp"
-        android:layout_height="558dp"
+        android:layout_width="match_parent"
+        android:layout_height="520dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent">
 
     </androidx.recyclerview.widget.RecyclerView>

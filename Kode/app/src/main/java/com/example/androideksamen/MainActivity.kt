@@ -1,6 +1,7 @@
 package com.example.androideksamen
 
 import android.content.Intent
+import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -57,7 +58,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun setAdapter(view: RecyclerView, data: ArrayList<RecipeData>){
-            val adapter = ItemAdapter(data)
+            val adapter = RecipeRowAdapter(data)
             val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(applicationContext)
             view.layoutManager = layoutManager
             view.itemAnimator = DefaultItemAnimator()
@@ -79,6 +80,15 @@ class MainActivity : AppCompatActivity() {
 
                 val assetItem = recipeDataArray.get(recipeNr)
                 val recipe = (assetItem as JSONObject).get("recipe")
+
+                // Download images START
+                val images = (recipe as JSONObject).get("images")
+                val smallImage = (images as JSONObject).get("SMALL")
+                val imageBytes = URL((smallImage as JSONObject).getString("url")).readBytes()
+                val image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+                // Download images END
+
+                dataItem.recipeImage = image
                 dataItem.recipeName = (recipe as JSONObject).getString("label")
 //                dataItem.yield = (recipe as JSONObject).getString("yield")
 
@@ -93,4 +103,15 @@ class MainActivity : AppCompatActivity() {
         }
         return allData
     }
+
+//    suspend fun downloadRecipeImage(recipeData: ArrayList<RecipeData>): ArrayList<RecipeData>{
+//        val apiId: String = "2a4625b1"
+//        val apiKey: String = "ba6e08d3cf44ce2e3e826635508ed960"
+//
+//        GlobalScope.async {
+//            recipeData.forEach { recipe ->
+//                val recipeURL = URL("")
+//            }
+//        }.await()
+//    }
 }
