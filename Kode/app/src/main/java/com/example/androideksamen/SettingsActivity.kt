@@ -37,7 +37,6 @@ class SettingsActivity : AppCompatActivity(){
 
             }
 
-
         }
 
         spinner.onItemSelectedListener = object :

@@ -12,9 +12,10 @@
         <entry key="app/src/main/res/drawable/border.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/input.xml" value="0.1215" />
+        <entry key="app/src/main/res/drawable/shape_drop_down_normal.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.20213470458984378" />
         <entry key="app/src/main/res/layout/activity_search_history.xml" value="0.22083333333333333" />
-        <entry key="app/src/main/res/layout/activity_settings.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_settings.xml" value="0.1" />
       </map>
     </option>
   </component>
