@@ -44,6 +44,17 @@ class MainActivity : AppCompatActivity() {
             GlobalScope.launch(Dispatchers.Main) {
                 userInput = searchInput.text.toString()
                 allRecipeData = downloadRecipes(userInput)
+
+//                { recipe ->
+//                    recipe.recipeMealType?.lowercase()?.contains(Settings.priority.lowercase())
+//                }
+
+                allRecipeData.forEach { recipe->
+                    Log.i("recipeTest", "recipeMealType: "+recipe.recipeMealType?.lowercase())
+                    Log.i("recipeTest", "Settings: "+Settings.priority.lowercase())
+                    Log.i("recipeTest", "BOOL: "+recipe.recipeMealType?.lowercase()?.contains(Settings.priority.lowercase()) as Boolean)
+                }
+
                 setAdapter(recipeRecyclerView, allRecipeData)
             }
         }
@@ -87,9 +98,16 @@ class MainActivity : AppCompatActivity() {
                 val imageBytes = URL((smallImage as JSONObject).getString("url")).readBytes()
                 val image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
                 // Download images END
+                val dietLabels = (recipe as JSONObject).get("dietLabels")
 
+                dataItem.recipeDietLabels = dietLabels.toString()
                 dataItem.recipeImage = image
                 dataItem.recipeName = (recipe as JSONObject).getString("label")
+
+                val mealType = (recipe as JSONObject).getString("mealType")
+                dataItem.recipeMealType = mealType
+
+//                dataItem.recipeMealType = (recipe as JSONObject).getString("mealType")
 //                dataItem.yield = (recipe as JSONObject).getString("yield")
 
                 allData.add(dataItem)
