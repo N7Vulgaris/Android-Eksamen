@@ -98,18 +98,32 @@ class MainActivity : AppCompatActivity() {
                 val imageBytes = URL((smallImage as JSONObject).getString("url")).readBytes()
                 val image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
                 // Download images END
-                val dietLabels = (recipe as JSONObject).get("dietLabels")
 
-                dataItem.recipeDietLabels = dietLabels.toString()
+                val dietLabels: JSONArray = (recipe as JSONObject).get("dietLabels") as JSONArray
+                val mealType: JSONArray = (recipe as JSONObject).get("mealType") as JSONArray
+
+                val dietLabelsList: ArrayList<String> = ArrayList<String>()
+                val mealTypeList: ArrayList<String> = ArrayList<String>()
+
+                // For the report: mention why we create put the JSONArray in an ArrayList, and
+                // then set the ArrayList to the RecipeData recipeDietLabels and recipe MealType
+
+                if(dietLabels != null){
+                    for (i in 0 until dietLabels.length()){
+                        dietLabelsList.add(dietLabels.getString(i))
+                        Log.i("testArray", "Array: "+dietLabels.getString(i))
+                    }
+                }
+                if(mealType != null){
+                    for (i in 0 until mealType.length()){
+                        mealTypeList.add(mealType.getString(i))
+                    }
+                }
+
+                dataItem.recipeDietLabels = dietLabelsList
                 dataItem.recipeImage = image
                 dataItem.recipeName = (recipe as JSONObject).getString("label")
-
-                val mealType = (recipe as JSONObject).getString("mealType")
-                dataItem.recipeMealType = mealType
-
-//                dataItem.recipeMealType = (recipe as JSONObject).getString("mealType")
-//                dataItem.yield = (recipe as JSONObject).getString("yield")
-
+                dataItem.recipeMealType = mealTypeList.get(0)
                 allData.add(dataItem)
             }
 

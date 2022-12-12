@@ -8,6 +8,6 @@ class RecipeData {
     var recipeName: String? = null
 //    var yield: String? = null
     var recipeMealType: String? = null
-    var recipeDietLabels: String? = null
+    var recipeDietLabels: ArrayList<String> = ArrayList()
 
 }

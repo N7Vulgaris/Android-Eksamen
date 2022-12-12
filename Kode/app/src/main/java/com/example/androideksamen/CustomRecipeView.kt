@@ -15,7 +15,8 @@ class CustomRecipeView: LinearLayout {
     var recipeName: TextView? = null
     var selectRecipeBtn: Button? = null
     var recipeMealType: TextView? = null
-    var recipeDietLabels: TextView? = null
+//    var recipeDietLabels1: TextView? = null
+//    var recipeDietLabels2: TextView? = null
     lateinit var linear1: LinearLayout
     lateinit var linear2: LinearLayout
 
@@ -24,7 +25,8 @@ class CustomRecipeView: LinearLayout {
         selectRecipeBtn = Button(context)
         recipeName = TextView(context)
         recipeMealType = TextView(context)
-        recipeDietLabels = TextView(context)
+//        recipeDietLabels1 = TextView(context)
+//        recipeDietLabels2 = TextView(context)
         linear1 = LinearLayout(context)
         linear2 = LinearLayout(context)
 
@@ -53,14 +55,16 @@ class CustomRecipeView: LinearLayout {
             Log.i("btn test", "TEST BUTTON WOO!")
         }
         // Recipe Meal Type
-        recipeMealType?.setPadding(20, 20, 20, 20)
+        recipeMealType?.setPadding(5, 0, 5, 0)
         recipeMealType?.setTextSize(15f)
         // Recipe Diet Labels
-        recipeDietLabels?.setTextSize(15f)
+//        recipeDietLabels1?.setTextSize(15f)
+//        recipeDietLabels2?.setTextSize(15f)
 
         linear2.addView(selectRecipeBtn)
         linear2.addView(recipeMealType)
-        linear2.addView(recipeDietLabels)
+//        linear2.addView(recipeDietLabels1)
+//        linear2.addView(recipeDietLabels2)
 
         addView(linear1)
         addView(linear2)
@@ -78,8 +82,12 @@ class CustomRecipeView: LinearLayout {
         recipeMealType?.setText(mealType)
     }
 
-    fun setRecipeDietLabels(dietLabels: String?){
-        recipeDietLabels?.setText(dietLabels)
+    fun setRecipeDietLabels1(dietLabels: String?){
+//        recipeDietLabels1?.setText(dietLabels)
+    }
+
+    fun setRecipeDietLabels2(dietLabels: String?){
+//        recipeDietLabels2?.setText(dietLabels)
     }
 
 }
