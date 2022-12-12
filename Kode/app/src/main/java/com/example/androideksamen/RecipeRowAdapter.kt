@@ -18,7 +18,7 @@ class RecipeRowAdapter(val allData: ArrayList<RecipeData>) : RecyclerView.Adapte
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder,position: Int) {
         val rowView = (holder.itemView as CustomRecipeView)
-        rowView.setPadding(0, 0, 0, 50)
+        rowView.setPadding(0, 50, 0, 0)
 
         rowView.setRecipeName(allData.get(position).recipeName)
         rowView.setRecipeImage(allData.get(position).recipeImage)
