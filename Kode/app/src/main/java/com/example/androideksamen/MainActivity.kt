@@ -1,6 +1,7 @@
 package com.example.androideksamen
 
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -21,6 +22,7 @@ import java.net.URL
 
 // Global variable imports
 import com.example.androideksamen.UserSettings.Settings
+import java.io.ByteArrayOutputStream
 
 @Dao
 interface SearchHistoryDao{
@@ -29,6 +31,7 @@ interface SearchHistoryDao{
 }
 
 @Database(entities = [SearchHistory::class], version = 1)
+@TypeConverters(Converters::class)
 abstract class AppDatabase: RoomDatabase(){
     abstract fun searchHistoryDao(): SearchHistoryDao
 }
@@ -36,12 +39,14 @@ abstract class AppDatabase: RoomDatabase(){
 class MainActivity : AppCompatActivity() {
 
 //    lateinit var allData: ArrayList<RecipeData>
+    lateinit var dbInstance: AppDatabase
+    lateinit var allRecipeData: ArrayList<RecipeData>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        var allRecipeData = ArrayList<RecipeData>()
+
         val searchBtn = findViewById<Button>(R.id.search_btn)
         val searchInput = findViewById<EditText>(R.id.search_input)
         val searchHistoryBtn = findViewById<Button>(R.id.search_history_btn)
@@ -51,23 +56,6 @@ class MainActivity : AppCompatActivity() {
 
         //Access to global settings variables here !!
         println(Settings)
-
-        // DB TEST START - Remember to switch back properties from the RecipeData class to the
-        // AbstractRecipeData class (recipeImage and recipeDietLabels)
-        lateinit var dbInstance: AppDatabase
-        dbInstance = Room.databaseBuilder(this, AppDatabase::class.java, "SearchHistory").build()
-
-        GlobalScope.launch(Dispatchers.IO) {
-
-            val newSearchHistory = SearchHistory()
-            newSearchHistory.recipeCalories = 20f
-            newSearchHistory.recipeMealType = "Dinner"
-            newSearchHistory.recipeName = "Tacos"
-            dbInstance.searchHistoryDao().addRecipe(newSearchHistory)
-
-            //
-        }
-        // DB TEST END
 
         // Button onClick START
         searchBtn.setOnClickListener{
@@ -88,6 +76,7 @@ class MainActivity : AppCompatActivity() {
                 // Sorting of downloaded data END
 
                 setAdapter(recipeRecyclerView, allRecipeData)
+                addRecipeListToSearchHistoryDatabase(allRecipeData)
             }
         }
         searchHistoryBtn.setOnClickListener {
@@ -100,9 +89,52 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun addRecipeListToSearchHistoryDatabase(data: ArrayList<RecipeData>){
+    fun addRecipeListToSearchHistoryDatabase(recipeDataList: ArrayList<RecipeData>){
         // First create a search history database, then create the functionality
         // to add search results to the database
+        // DB TEST START - Remember to switch back properties from the RecipeData class to the
+        // AbstractRecipeData class (recipeImage and recipeDietLabels)
+
+//        val typeConverter: Converters = Converters()
+
+        dbInstance = Room.databaseBuilder(this, AppDatabase::class.java, "SearchHistory").build()
+
+        GlobalScope.launch(Dispatchers.IO) {
+//            recipeDataList.forEach { recipe ->
+//                val newSearchHistory = SearchHistory()
+//                newSearchHistory.recipeImageByteArray = recipe.recipeName?.encodeToByteArray()
+//                newSearchHistory.recipeName = recipe.recipeName
+//                newSearchHistory.recipeMealType = recipe.recipeMealType
+//                newSearchHistory.recipeDietLabels = typeConverter
+//                newSearchHistory.recipeCalories = recipe.recipeCalories
+//                dbInstance.searchHistoryDao().addRecipe(newSearchHistory)
+//            }
+
+//            val image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+//
+//            val newSearchHistory = SearchHistory(0,imageBytes , "bob", "Kaka", dietLabels, 32f)
+//
+//            dbInstance.searchHistoryDao().addRecipe(newSearchHistory)
+//            val allSearchHistoryData = dbInstance.searchHistoryDao().getAll()
+            recipeDataList.forEach { searchHistory ->
+
+                val stream = ByteArrayOutputStream()
+                val searchHistoryImage = searchHistory.recipeImage
+                searchHistoryImage?.compress(Bitmap.CompressFormat.PNG, 90, stream)
+                val imageByteArray = stream.toByteArray()
+
+
+                val newSearchHistoryItem = SearchHistory(0,
+                imageByteArray,
+                searchHistory.recipeName,
+                searchHistory.recipeMealType,
+                searchHistory.recipeDietLabels,
+                searchHistory.recipeCalories)
+                dbInstance.searchHistoryDao().addRecipe(newSearchHistoryItem)
+            }
+
+        }
+        // DB TEST END
     }
 
     fun showStartupRecipes(data: ArrayList<RecipeData>){
@@ -137,8 +169,11 @@ class MainActivity : AppCompatActivity() {
                 // Download images START
                 val images = (recipe as JSONObject).get("images")
                 val smallImage = (images as JSONObject).get("SMALL")
+
+//                val recipeImageURL = (smallImage as JSONObject).getString("url")
+
                 val imageBytes = URL((smallImage as JSONObject).getString("url")).readBytes()
-                val image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+                val recipeImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
                 // Download images END
 
                 val dietLabels: JSONArray = (recipe as JSONObject).get("dietLabels") as JSONArray
@@ -165,7 +200,7 @@ class MainActivity : AppCompatActivity() {
                 var recipeYield = (recipe as JSONObject).getString("yield").toFloat()
 
                 dataItem.recipeDietLabels = dietLabelsList
-                dataItem.recipeImage = image
+                dataItem.recipeImage = recipeImage
                 dataItem.recipeName = (recipe as JSONObject).getString("label")
                 dataItem.recipeMealType = mealTypeList.get(0)
                 dataItem.recipeCalories = recipeCalories / recipeYield

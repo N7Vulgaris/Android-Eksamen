@@ -59,9 +59,12 @@
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/search_history_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="584dp"
-        tools:layout_editor_absoluteX="4dp"
-        tools:layout_editor_absoluteY="146dp" />
+        android:layout_marginBottom="1dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

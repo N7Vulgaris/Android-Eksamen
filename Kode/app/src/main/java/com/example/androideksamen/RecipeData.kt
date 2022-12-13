@@ -2,9 +2,11 @@ package com.example.androideksamen
 
 import android.graphics.Bitmap
 
-class RecipeData: AbstractRecipeData() {
+class RecipeData {
     var recipeImage: Bitmap? = null
-
+    var recipeName: String? = null
+    //    var yield: String? = null
+    var recipeMealType: String? = null
     var recipeDietLabels: ArrayList<String> = ArrayList()
-
+    var recipeCalories: Float? = null
 }
