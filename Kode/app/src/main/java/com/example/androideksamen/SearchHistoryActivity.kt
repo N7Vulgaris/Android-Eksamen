@@ -28,9 +28,10 @@ class SearchHistoryActivity : AppCompatActivity() {
             val searchHistoryDataList = dbInstance.searchHistoryDao().getAll()
             Log.i("testDb", "DB list: "+searchHistoryDataList)
 
-
-            GlobalScope.launch(Dispatchers.Main) {
-                setAdapter(searchHistoryRv, searchHistoryDataList)
+            if(searchHistoryDataList.isNotEmpty()) {
+                GlobalScope.launch(Dispatchers.Main) {
+                    setAdapter(searchHistoryRv, searchHistoryDataList)
+                }
             }
         }
 
