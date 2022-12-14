@@ -3,6 +3,8 @@ package com.example.androideksamen
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.drawable.Drawable
+import android.media.Image
 import android.util.Log
 import android.view.ViewGroup
 import android.widget.*
@@ -15,6 +17,7 @@ class CustomRecipeView: LinearLayout {
     var recipeName: TextView? = null
     var selectRecipeBtn: Button? = null
     var recipeMealType: TextView? = null
+    var recipeFavorite: ImageView? = null
 //    var recipeDietLabels1: TextView? = null
 //    var recipeDietLabels2: TextView? = null
     lateinit var linear1: LinearLayout
@@ -26,6 +29,7 @@ class CustomRecipeView: LinearLayout {
         selectRecipeBtn = Button(context)
         recipeName = TextView(context)
         recipeMealType = TextView(context)
+        recipeFavorite = ImageView(context)
 //        recipeDietLabels1 = TextView(context)
 //        recipeDietLabels2 = TextView(context)
         linear1 = LinearLayout(context)
@@ -41,8 +45,11 @@ class CustomRecipeView: LinearLayout {
         // Recipe Name
         recipeName?.textSize = 20f
 
+        // Recipe Favorite Icon
+
         linear1.addView(recipeImage)
         linear1.addView(recipeName)
+        linear1.addView(recipeFavorite)
 
         // LinearLayout2
 
@@ -85,6 +92,15 @@ class CustomRecipeView: LinearLayout {
 
     fun setRecipeMealType(mealType: String?){
         recipeMealType?.setText(mealType)
+    }
+
+    fun changeFavoriteIcon(favorite: Boolean){
+        if(favorite){
+            recipeFavorite!!.setImageResource(R.drawable.favorite_true)
+        }else{
+            recipeFavorite!!.setImageResource(R.drawable.favorite_false)
+        }
+
     }
 
     fun setRecipeDietLabels1(dietLabels: String?){

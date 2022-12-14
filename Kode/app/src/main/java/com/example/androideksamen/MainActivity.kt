@@ -28,6 +28,7 @@ import java.io.ByteArrayOutputStream
 interface SearchHistoryDao{
     @Insert fun addRecipe(recipe: SearchHistory)
     @Query("SELECT * FROM SearchHistory") fun getAll(): List<SearchHistory>
+    @Query("UPDATE SearchHistory SET recipeIsFavorited = :isFavorited WHERE recipeName = :name") fun updateFavorited(isFavorited: Boolean, name: String?)
 }
 
 @Database(entities = [SearchHistory::class], version = 1)
@@ -46,7 +47,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
         val searchBtn = findViewById<Button>(R.id.search_btn)
         val searchInput = findViewById<EditText>(R.id.search_input)
         val searchHistoryBtn = findViewById<Button>(R.id.search_history_btn)
@@ -60,23 +60,26 @@ class MainActivity : AppCompatActivity() {
         // Button onClick START
         searchBtn.setOnClickListener{
             GlobalScope.launch(Dispatchers.Main) {
-                userInput = searchInput.text.toString()
-                allRecipeData = downloadRecipes(userInput)
 
-                // Sorting of downloaded data START (Make this into its own function)
+                userInput = searchInput.text.toString()
+                if(userInput != ""){
+
+                    allRecipeData = downloadRecipes(userInput)
+
+                    // Sorting of downloaded data START (Make this into its own function)
 //                { recipe ->
 //                    recipe.recipeMealType?.lowercase()?.contains(Settings.priority.lowercase())
 //                }
 
-                allRecipeData.forEach { recipe->
-                    Log.i("recipeTest", "recipeMealType: "+recipe.recipeMealType?.lowercase())
-                    Log.i("recipeTest", "Settings: "+Settings.priority.lowercase())
-                    Log.i("recipeTest", "BOOL: "+recipe.recipeMealType?.lowercase()?.contains(Settings.priority.lowercase()) as Boolean)
+                    allRecipeData.forEach { recipe->
+                        Log.i("recipeTest", "recipeMealType: "+recipe.recipeMealType?.lowercase())
+                        Log.i("recipeTest", "Settings: "+Settings.priority.lowercase())
+                        Log.i("recipeTest", "BOOL: "+recipe.recipeMealType?.lowercase()?.contains(Settings.priority.lowercase()) as Boolean)
+                    }
+                    // Sorting of downloaded data END
+                    addRecipeListToSearchHistoryDatabase(allRecipeData)
+                    setAdapter(recipeRecyclerView, allRecipeData, dbInstance)
                 }
-                // Sorting of downloaded data END
-
-                setAdapter(recipeRecyclerView, allRecipeData)
-                addRecipeListToSearchHistoryDatabase(allRecipeData)
             }
         }
         searchHistoryBtn.setOnClickListener {
@@ -100,24 +103,9 @@ class MainActivity : AppCompatActivity() {
         dbInstance = Room.databaseBuilder(this, AppDatabase::class.java, "SearchHistory").build()
 
         GlobalScope.launch(Dispatchers.IO) {
-//            recipeDataList.forEach { recipe ->
-//                val newSearchHistory = SearchHistory()
-//                newSearchHistory.recipeImageByteArray = recipe.recipeName?.encodeToByteArray()
-//                newSearchHistory.recipeName = recipe.recipeName
-//                newSearchHistory.recipeMealType = recipe.recipeMealType
-//                newSearchHistory.recipeDietLabels = typeConverter
-//                newSearchHistory.recipeCalories = recipe.recipeCalories
-//                dbInstance.searchHistoryDao().addRecipe(newSearchHistory)
-//            }
-
-//            val image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
-//
-//            val newSearchHistory = SearchHistory(0,imageBytes , "bob", "Kaka", dietLabels, 32f)
-//
-//            dbInstance.searchHistoryDao().addRecipe(newSearchHistory)
-//            val allSearchHistoryData = dbInstance.searchHistoryDao().getAll()
             recipeDataList.forEach { searchHistory ->
 
+                // Encode Bitmap image to ByteArray
                 val stream = ByteArrayOutputStream()
                 val searchHistoryImage = searchHistory.recipeImage
                 searchHistoryImage?.compress(Bitmap.CompressFormat.PNG, 90, stream)
@@ -129,7 +117,8 @@ class MainActivity : AppCompatActivity() {
                 searchHistory.recipeName,
                 searchHistory.recipeMealType,
                 searchHistory.recipeDietLabels,
-                searchHistory.recipeCalories)
+                searchHistory.recipeCalories,
+                searchHistory.recipeIsFavorited)
                 dbInstance.searchHistoryDao().addRecipe(newSearchHistoryItem)
             }
 
@@ -142,8 +131,8 @@ class MainActivity : AppCompatActivity() {
         // when the app first launches
     }
 
-    fun setAdapter(view: RecyclerView, data: ArrayList<RecipeData>){
-            val adapter = RecipeRowAdapter(data)
+    fun setAdapter(view: RecyclerView, data: ArrayList<RecipeData>, dbInstance: AppDatabase){
+            val adapter = RecipeRowAdapter(data, dbInstance)
             val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(applicationContext)
             view.layoutManager = layoutManager
             view.itemAnimator = DefaultItemAnimator()

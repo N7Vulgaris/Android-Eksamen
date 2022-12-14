@@ -6,8 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlin.coroutines.coroutineContext
 
-class RecipeRowAdapter(val allData: ArrayList<RecipeData>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class RecipeRowAdapter(val allData: ArrayList<RecipeData>, val dbInstance: AppDatabase) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     inner class ViewHolder(val view: View): RecyclerView.ViewHolder(view)
 
@@ -19,6 +24,21 @@ class RecipeRowAdapter(val allData: ArrayList<RecipeData>) : RecyclerView.Adapte
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder,position: Int) {
         val rowView = (holder.itemView as CustomRecipeView)
         rowView.setPadding(0, 50, 0, 0)
+
+        rowView.recipeFavorite?.setOnClickListener {
+            if (allData.get(position).recipeIsFavorited == false){
+                allData.get(position).recipeIsFavorited = true
+            }else if(allData.get(position).recipeIsFavorited == true){
+                allData.get(position).recipeIsFavorited = false
+            }
+            val btnBool = allData.get(position).recipeIsFavorited
+            Log.i("testBool", "button favotite:" + btnBool)
+
+            rowView.changeFavoriteIcon(allData.get(position).recipeIsFavorited)
+            updateItemInDb(allData.get(position).recipeIsFavorited, allData.get(position).recipeName)
+        }
+
+        rowView.changeFavoriteIcon(allData.get(position).recipeIsFavorited)
 
         rowView.setRecipeName(allData.get(position).recipeName)
         rowView.setRecipeImage(allData.get(position).recipeImage)
@@ -54,6 +74,11 @@ class RecipeRowAdapter(val allData: ArrayList<RecipeData>) : RecyclerView.Adapte
 //
 //        Log.i("testArray", "in adapter: "+allData.get(position).recipeDietLabels.get(1))
 
+    }
+    fun updateItemInDb(favorited: Boolean, name: String?){
+        GlobalScope.launch(Dispatchers.IO) {
+            dbInstance.searchHistoryDao().updateFavorited(favorited, name)
+        }
     }
 
     override fun getItemCount(): Int {

@@ -1,6 +1,8 @@
 package com.example.androideksamen
 
 import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
+import android.media.Image
 
 class RecipeData {
     var recipeImage: Bitmap? = null
@@ -9,4 +11,5 @@ class RecipeData {
     var recipeMealType: String? = null
     var recipeDietLabels: ArrayList<String> = ArrayList()
     var recipeCalories: Float? = null
+    var recipeIsFavorited: Boolean = false
 }

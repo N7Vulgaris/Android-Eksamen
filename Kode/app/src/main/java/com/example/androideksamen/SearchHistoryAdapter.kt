@@ -6,8 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
-class SearchHistoryAdapter(val allData: List<SearchHistory>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class SearchHistoryAdapter(val allData: List<SearchHistory>, val dbInstance: AppDatabase) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     inner class ViewHolder(val view: View): RecyclerView.ViewHolder(view)
 
@@ -23,6 +26,22 @@ class SearchHistoryAdapter(val allData: List<SearchHistory>) : RecyclerView.Adap
         // Find a way to bypass null-asserted (!! after allData.get(position).recipeImage)
         val searchHistoryImage = BitmapFactory.decodeByteArray(allData.get(position).recipeImage, 0, allData.get(position).recipeImage!!.size)
 
+//        rowView.recipeFavorite.setImageDrawable(res.drawable)
+
+        rowView.recipeFavorite?.setOnClickListener {
+            if (allData.get(position).recipeIsFavorited == false){
+                allData.get(position).recipeIsFavorited = true
+            }else if(allData.get(position).recipeIsFavorited == true){
+                allData.get(position).recipeIsFavorited = false
+            }
+            val btnBool = allData.get(position).recipeIsFavorited
+            Log.i("testBool", "button favotite:" + btnBool)
+
+            rowView.changeFavoriteIcon(allData.get(position).recipeIsFavorited)
+            updateItemInDb(allData.get(position).recipeIsFavorited, allData.get(position).recipeName)
+        }
+
+        rowView.changeFavoriteIcon(allData.get(position).recipeIsFavorited)
 
         rowView.setRecipeName(allData.get(position).recipeName)
         rowView.setRecipeImage(searchHistoryImage)
@@ -59,9 +78,14 @@ class SearchHistoryAdapter(val allData: List<SearchHistory>) : RecyclerView.Adap
 //        Log.i("testArray", "in adapter: "+allData.get(position).recipeDietLabels.get(1))
 
     }
+    fun updateItemInDb(favorited: Boolean, name: String?){
+        GlobalScope.launch(Dispatchers.IO) {
+            dbInstance.searchHistoryDao().updateFavorited(favorited, name)
+        }
+    }
 
     override fun getItemCount(): Int {
-//        return allData.size
-        return UserSettings.maxShowItems
+        return allData.size
+//        return UserSettings.maxShowItems
     }
 }
