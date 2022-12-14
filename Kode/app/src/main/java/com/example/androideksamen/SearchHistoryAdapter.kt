@@ -1,6 +1,9 @@
 package com.example.androideksamen
 
+import android.content.Context
+import android.content.Intent
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -44,8 +47,17 @@ class SearchHistoryAdapter(val allData: List<SearchHistory>, val dbInstance: App
         rowView.changeFavoriteIcon(allData.get(position).recipeIsFavorited)
 
         rowView.setRecipeName(allData.get(position).recipeName)
+
         rowView.setRecipeImage(searchHistoryImage)
+
         rowView.setRecipeMealType(allData.get(position).recipeMealType)
+
+        rowView.recipeName?.setOnClickListener {
+            goToExternalRecipeWebsite(allData.get(position).recipeExternalWebsite, rowView.context)
+        }
+        rowView.recipeImage?.setOnClickListener {
+            goToExternalRecipeWebsite(allData.get(position).recipeExternalWebsite, rowView.context)
+        }
 
 
 //        (0 until allData.get(position).recipeDietLabels.size).forEach { label ->
@@ -84,8 +96,14 @@ class SearchHistoryAdapter(val allData: List<SearchHistory>, val dbInstance: App
         }
     }
 
+    fun goToExternalRecipeWebsite(url: String?, context: Context){
+        val recipeUri = Uri.parse(url)
+        val externalWebsiteIntent = Intent(Intent.ACTION_VIEW, recipeUri)
+        context.startActivity(externalWebsiteIntent)
+    }
+
     override fun getItemCount(): Int {
-        return allData.size
-//        return UserSettings.maxShowItems
+//        return allData.size
+        return UserSettings.maxShowItems
     }
 }

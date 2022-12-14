@@ -12,4 +12,5 @@ class RecipeData {
     var recipeDietLabels: ArrayList<String> = ArrayList()
     var recipeCalories: Float? = null
     var recipeIsFavorited: Boolean = false
+    var recipeExternalWebsite: String? = null
 }

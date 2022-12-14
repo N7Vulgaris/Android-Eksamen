@@ -118,7 +118,8 @@ class MainActivity : AppCompatActivity() {
                 searchHistory.recipeMealType,
                 searchHistory.recipeDietLabels,
                 searchHistory.recipeCalories,
-                searchHistory.recipeIsFavorited)
+                searchHistory.recipeIsFavorited,
+                searchHistory.recipeExternalWebsite)
                 dbInstance.searchHistoryDao().addRecipe(newSearchHistoryItem)
             }
 
@@ -188,6 +189,7 @@ class MainActivity : AppCompatActivity() {
                 var recipeCalories = (recipe as JSONObject).getString("calories").toFloat()
                 var recipeYield = (recipe as JSONObject).getString("yield").toFloat()
 
+                dataItem.recipeExternalWebsite = (recipe as JSONObject).getString("url")
                 dataItem.recipeDietLabels = dietLabelsList
                 dataItem.recipeImage = recipeImage
                 dataItem.recipeName = (recipe as JSONObject).getString("label")

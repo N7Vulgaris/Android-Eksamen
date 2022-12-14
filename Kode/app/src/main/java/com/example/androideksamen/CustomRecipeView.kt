@@ -30,6 +30,9 @@ class CustomRecipeView: LinearLayout {
         recipeName = TextView(context)
         recipeMealType = TextView(context)
         recipeFavorite = ImageView(context)
+
+        this.weightSum = 100f
+        val lp: LayoutParams = LinearLayout.LayoutParams(0,100)
 //        recipeDietLabels1 = TextView(context)
 //        recipeDietLabels2 = TextView(context)
         linear1 = LinearLayout(context)
@@ -42,8 +45,14 @@ class CustomRecipeView: LinearLayout {
         linear3.orientation = LinearLayout.HORIZONTAL
 
         // LinearLayout1
+        // Recipe Image
+
         // Recipe Name
         recipeName?.textSize = 20f
+//        recipeName?.isSingleLine = false
+//        recipeName?.setLines(2)
+//        recipeName?.maxLines = 3
+        recipeName?.layoutParams = LinearLayout.LayoutParams(500,ViewGroup.LayoutParams.MATCH_PARENT)
 
         // Recipe Favorite Icon
 

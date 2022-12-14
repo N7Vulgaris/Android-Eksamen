@@ -1,6 +1,9 @@
 package com.example.androideksamen
 
+import android.content.Context
+import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -41,8 +44,17 @@ class RecipeRowAdapter(val allData: ArrayList<RecipeData>, val dbInstance: AppDa
         rowView.changeFavoriteIcon(allData.get(position).recipeIsFavorited)
 
         rowView.setRecipeName(allData.get(position).recipeName)
+
         rowView.setRecipeImage(allData.get(position).recipeImage)
+
         rowView.setRecipeMealType(allData.get(position).recipeMealType)
+
+        rowView.recipeName?.setOnClickListener {
+            goToExternalRecipeWebsite(allData.get(position).recipeExternalWebsite, rowView.context)
+        }
+        rowView.recipeImage?.setOnClickListener {
+            goToExternalRecipeWebsite(allData.get(position).recipeExternalWebsite, rowView.context)
+        }
 
 
 //        (0 until allData.get(position).recipeDietLabels.size).forEach { label ->
@@ -79,6 +91,12 @@ class RecipeRowAdapter(val allData: ArrayList<RecipeData>, val dbInstance: AppDa
         GlobalScope.launch(Dispatchers.IO) {
             dbInstance.searchHistoryDao().updateFavorited(favorited, name)
         }
+    }
+
+    fun goToExternalRecipeWebsite(url: String?, context: Context){
+        val recipeUri = Uri.parse(url)
+        val externalWebsiteIntent = Intent(Intent.ACTION_VIEW, recipeUri)
+        context.startActivity(externalWebsiteIntent)
     }
 
     override fun getItemCount(): Int {

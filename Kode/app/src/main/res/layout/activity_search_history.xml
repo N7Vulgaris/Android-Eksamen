@@ -42,11 +42,11 @@
             android:textColor="@color/black" />
 
         <Button
-            android:id="@+id/lunch_filter_btn"
+            android:id="@+id/brunch_filter_btn"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="30"
-            android:text="Lunch"
+            android:text="Brunch"
             android:backgroundTint="#EEEEEE"
             android:textColor="@color/black" />
 
