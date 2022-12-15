@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity() {
                     }
                     // Sorting of downloaded data END
                     addRecipeListToSearchHistoryDatabase(allRecipeData)
-                    setAdapter(recipeRecyclerView, allRecipeData, dbInstance)
+                    setAdapter(recipeRecyclerView, allRecipeData, dbInstance, recipeRecyclerView)
                 }
             }
         }
@@ -132,12 +132,12 @@ class MainActivity : AppCompatActivity() {
         // when the app first launches
     }
 
-    fun setAdapter(view: RecyclerView, data: ArrayList<RecipeData>, dbInstance: AppDatabase){
-            val adapter = RecipeRowAdapter(data, dbInstance)
-            val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(applicationContext)
-            view.layoutManager = layoutManager
-            view.itemAnimator = DefaultItemAnimator()
-            view.adapter = adapter
+    fun setAdapter(view: RecyclerView, data: ArrayList<RecipeData>, dbInstance: AppDatabase, Rv: RecyclerView){
+        val adapter = RecipeRowAdapter(data, dbInstance)
+        val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(applicationContext)
+        view.layoutManager = layoutManager
+        view.itemAnimator = DefaultItemAnimator()
+        view.adapter = adapter
     }
 
     suspend fun downloadRecipes(userInput: String): ArrayList<RecipeData>{

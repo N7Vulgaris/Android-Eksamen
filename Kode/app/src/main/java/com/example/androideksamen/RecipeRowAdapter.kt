@@ -7,6 +7,7 @@ import android.net.Uri
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
@@ -26,7 +27,10 @@ class RecipeRowAdapter(val allData: ArrayList<RecipeData>, val dbInstance: AppDa
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder,position: Int) {
         val rowView = (holder.itemView as CustomRecipeView)
+
         rowView.setPadding(0, 50, 0, 0)
+
+        rowView.setBackgroundColor(allData.get(position).recipeCalories, UserSettings.Settings.dailyIntake, rowView.selectRecipeBtn)
 
         rowView.recipeFavorite?.setOnClickListener {
             if (allData.get(position).recipeIsFavorited == false){
@@ -39,6 +43,12 @@ class RecipeRowAdapter(val allData: ArrayList<RecipeData>, val dbInstance: AppDa
 
             rowView.changeFavoriteIcon(allData.get(position).recipeIsFavorited)
             updateItemInDb(allData.get(position).recipeIsFavorited, allData.get(position).recipeName)
+        }
+
+        rowView.selectRecipeBtn?.setOnClickListener {
+            // Make math operation into its own function
+            UserSettings.dailyIntake -= allData.get(position).recipeCalories
+            rowView.setBackgroundColor(allData.get(position).recipeCalories, UserSettings.Settings.dailyIntake, rowView.selectRecipeBtn)
         }
 
         rowView.changeFavoriteIcon(allData.get(position).recipeIsFavorited)

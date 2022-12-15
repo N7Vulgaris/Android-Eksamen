@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.view.isVisible
 
 class CustomRecipeView: LinearLayout {
 
@@ -31,14 +32,22 @@ class CustomRecipeView: LinearLayout {
         recipeMealType = TextView(context)
         recipeFavorite = ImageView(context)
 
-        this.weightSum = 100f
-        val lp: LayoutParams = LinearLayout.LayoutParams(0,100)
+//        this.weightSum = 100f
+//        val lp: LayoutParams = LinearLayout.LayoutParams(0,100)
 //        recipeDietLabels1 = TextView(context)
 //        recipeDietLabels2 = TextView(context)
         linear1 = LinearLayout(context)
         linear2 = LinearLayout(context)
         linear3 = LinearLayout(context)
 
+        this.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+        linear1.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+        linear2.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+        linear3.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+//        this.layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT
+//        this.layoutParams.width = LinearLayout.LayoutParams.MATCH_PARENT
+
+        this.setPadding(0, 0, 0 ,30)
         this.orientation = LinearLayout.VERTICAL
         linear1.orientation = LinearLayout.HORIZONTAL
         linear2.orientation = LinearLayout.HORIZONTAL
@@ -110,6 +119,17 @@ class CustomRecipeView: LinearLayout {
             recipeFavorite!!.setImageResource(R.drawable.favorite_false)
         }
 
+    }
+
+    fun setBackgroundColor(recipeCalories: Float?, maxDailyCalories: Float, btn: Button?){
+        if (recipeCalories != null){
+            if(recipeCalories > maxDailyCalories){
+                this.setBackgroundColor(Color.parseColor("#FFCCCB"))
+                btn?.isVisible = false
+            }else{
+                this.setBackgroundColor(Color.LTGRAY)
+            }
+        }
     }
 
     fun setRecipeDietLabels1(dietLabels: String?){

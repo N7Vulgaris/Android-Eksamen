@@ -12,7 +12,7 @@ data class SearchHistory (
     @ColumnInfo(name = "recipeName") val recipeName: String?,
     @ColumnInfo(name = "recipeMealType") val recipeMealType: String?,
     @ColumnInfo(name = "recipeDietLabels") val recipeDietLabels: ArrayList<String>,
-    @ColumnInfo(name = "recipeCalories") val recipeCalories: Float?,
+    @ColumnInfo(name = "recipeCalories") val recipeCalories: Float,
     @ColumnInfo(name = "recipeIsFavorited")var recipeIsFavorited: Boolean,
     @ColumnInfo(name = "recipeExternalWebsite") var recipeExternalWebsite: String?
 )

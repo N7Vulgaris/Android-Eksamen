@@ -7,6 +7,7 @@ import android.net.Uri
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.Dispatchers
@@ -26,15 +27,21 @@ class SearchHistoryAdapter(val allData: List<SearchHistory>, val dbInstance: App
         val rowView = (holder.itemView as CustomRecipeView)
         rowView.setPadding(0, 50, 0, 0)
 
+//        rowView.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+//        rowView.layoutParams.width = LinearLayout.LayoutParams.MATCH_PARENT
+//        rowView.layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT
+
+        rowView.setBackgroundColor(allData.get(position).recipeCalories, UserSettings.Settings.dailyIntake, rowView.selectRecipeBtn)
+
         // Find a way to bypass null-asserted (!! after allData.get(position).recipeImage)
         val searchHistoryImage = BitmapFactory.decodeByteArray(allData.get(position).recipeImage, 0, allData.get(position).recipeImage!!.size)
 
 //        rowView.recipeFavorite.setImageDrawable(res.drawable)
 
         rowView.recipeFavorite?.setOnClickListener {
-            if (allData.get(position).recipeIsFavorited == false){
+            if (!allData.get(position).recipeIsFavorited){
                 allData.get(position).recipeIsFavorited = true
-            }else if(allData.get(position).recipeIsFavorited == true){
+            }else if(allData.get(position).recipeIsFavorited){
                 allData.get(position).recipeIsFavorited = false
             }
             val btnBool = allData.get(position).recipeIsFavorited
@@ -42,6 +49,14 @@ class SearchHistoryAdapter(val allData: List<SearchHistory>, val dbInstance: App
 
             rowView.changeFavoriteIcon(allData.get(position).recipeIsFavorited)
             updateItemInDb(allData.get(position).recipeIsFavorited, allData.get(position).recipeName)
+        }
+
+        rowView.selectRecipeBtn?.setOnClickListener {
+// Make math operation into its own function
+            if(allData.get(position).recipeCalories <= UserSettings.Settings.dailyIntake){
+                UserSettings.dailyIntake -= allData.get(position).recipeCalories
+            }
+            rowView.setBackgroundColor(allData.get(position).recipeCalories, UserSettings.Settings.dailyIntake, rowView.selectRecipeBtn)
         }
 
         rowView.changeFavoriteIcon(allData.get(position).recipeIsFavorited)

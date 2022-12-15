@@ -10,7 +10,7 @@ class UserSettings: Application() {
         val priorities = arrayOf("Breakfast","Lunch","Dinner")
 
         //Initial settings values
-        var dailyIntake: Int = 2750
+        var dailyIntake: Float = 2750f
         var maxShowItems: Int = 8
         var dietType: String = "Low Carb"
         var dietMaxAmount: Int = 58
