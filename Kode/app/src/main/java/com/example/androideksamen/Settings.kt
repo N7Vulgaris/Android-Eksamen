@@ -1,7 +1,8 @@
 package com.example.androideksamen
 //https://stackoverflow.com/questions/52844343/kotlin-set-value-of-global-variable
 import android.app.Application
-
+//Class for storing user settings for the application.
+//Contains an array of diet types, priorities, and preset initial settings.
 // Global variables
 class UserSettings: Application() {
     companion object Settings {

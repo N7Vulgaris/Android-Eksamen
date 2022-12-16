@@ -20,7 +20,7 @@ class SettingsActivity : AppCompatActivity(){
         val spinner = findViewById<Spinner>(R.id.spinner)
 
         // attached arrayAdapter to spinner
-        spinner2.adapter = createAdapter(Settings.dietTypes)
+        spinner2.adapter = createAdapter(Settings.dietTypes) // referred to in report
         spinner.adapter = createAdapter(Settings.priorities)
 
         spinner2.onItemSelectedListener = object :
