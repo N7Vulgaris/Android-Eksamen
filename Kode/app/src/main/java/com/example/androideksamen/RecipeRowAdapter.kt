@@ -15,6 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlin.coroutines.coroutineContext
+import com.example.androideksamen.UserSettings.Settings
 
 class RecipeRowAdapter(val allData: ArrayList<RecipeData>, val dbInstance: AppDatabase) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -30,7 +31,7 @@ class RecipeRowAdapter(val allData: ArrayList<RecipeData>, val dbInstance: AppDa
 
         rowView.setPadding(0, 50, 0, 0)
 
-        rowView.setBackgroundColor(allData.get(position).recipeCalories, UserSettings.Settings.dailyIntake, rowView.selectRecipeBtn)
+        rowView.setBackgroundColor(allData.get(position).recipeCalories, Settings.dailyIntake, rowView.selectRecipeBtn)
 
         rowView.recipeFavorite?.setOnClickListener {
             if (allData.get(position).recipeIsFavorited == false){
@@ -47,8 +48,8 @@ class RecipeRowAdapter(val allData: ArrayList<RecipeData>, val dbInstance: AppDa
 
         rowView.selectRecipeBtn?.setOnClickListener {
             // Make math operation into its own function
-            UserSettings.dailyIntake -= allData.get(position).recipeCalories
-            rowView.setBackgroundColor(allData.get(position).recipeCalories, UserSettings.Settings.dailyIntake, rowView.selectRecipeBtn)
+            Settings.dailyIntake -= allData.get(position).recipeCalories
+            rowView.setBackgroundColor(allData.get(position).recipeCalories, Settings.dailyIntake, rowView.selectRecipeBtn)
         }
 
         rowView.changeFavoriteIcon(allData.get(position).recipeIsFavorited)

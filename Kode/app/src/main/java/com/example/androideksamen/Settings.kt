@@ -17,6 +17,22 @@ class UserSettings: Application() {
         var dietMaxAmount: Int = 58
         var priority: String = "Dinner"
 
+        fun getDietTypeIndex(): Int {
+            return dietTypes.indexOf(dietType)
+        }
+
+        fun getPriorityIndex(): Int {
+            return priorities.indexOf(priority)
+        }
+
+        fun setDietType(position: Int) {
+            Settings.dietType = Settings.dietTypes[position]
+        }
+
+        fun setPriority(position: Int) {
+            Settings.priority = Settings.priorities[position]
+        }
+
         override fun toString(): String {
             return "Settings{"+ dailyIntake+","+
                     maxShowItems+","+

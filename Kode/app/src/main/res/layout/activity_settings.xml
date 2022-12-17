@@ -7,7 +7,7 @@
     tools:context=".SettingsActivity">
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/save_button"
         android:layout_width="310dp"
         android:layout_height="62dp"
         android:layout_marginBottom="26dp"
@@ -20,7 +20,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/settings_title"
         android:layout_width="310dp"
         android:layout_height="44dp"
         android:layout_marginTop="44dp"
@@ -36,7 +36,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView7"
+        android:id="@+id/infotext1"
         android:layout_width="118dp"
         android:layout_height="68dp"
         android:layout_marginTop="105dp"
@@ -55,7 +55,7 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
-        android:id="@+id/textView10"
+        android:id="@+id/infotext2"
         android:layout_width="118dp"
         android:layout_height="68dp"
         android:layout_marginTop="190dp"
@@ -74,7 +74,7 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
-        android:id="@+id/textView11"
+        android:id="@+id/infotext3"
         android:layout_width="121dp"
         android:layout_height="55dp"
         android:layout_marginTop="274dp"
@@ -93,7 +93,7 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
-        android:id="@+id/textView12"
+        android:id="@+id/infotext4"
         android:layout_width="122dp"
         android:layout_height="50dp"
         android:layout_marginTop="345dp"
@@ -112,7 +112,7 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <Spinner
-        android:id="@+id/spinner"
+        android:id="@+id/priority"
         android:layout_width="120dp"
         android:layout_height="45dp"
         android:layout_marginTop="20dp"
@@ -124,7 +124,7 @@
         app:layout_constraintVertical_bias="0.496" />
 
     <Spinner
-        android:id="@+id/spinner2"
+        android:id="@+id/diets"
         android:layout_width="80dp"
         android:layout_height="50dp"
         android:layout_marginEnd="-15dp"
@@ -136,7 +136,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/dailyintake"
         android:layout_width="120dp"
         android:layout_height="45dp"
         android:layout_marginStart="230dp"
@@ -148,7 +148,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/maxitems"
         android:layout_width="120dp"
         android:layout_height="45dp"
         android:layout_marginStart="230dp"
@@ -160,7 +160,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editText3"
+        android:id="@+id/dietamount"
         android:layout_width="80dp"
         android:layout_height="50dp"
         android:layout_marginStart="270dp"
