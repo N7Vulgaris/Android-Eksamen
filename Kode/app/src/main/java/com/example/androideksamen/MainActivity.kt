@@ -24,22 +24,20 @@ import java.net.URL
 // Global variable imports
 import java.io.ByteArrayOutputStream
 
-@Database(entities = [SearchHistoryEntity::class, UserSettingsEntity::class], version = 1)
-@TypeConverters(Converters::class)
-abstract class AppDatabase : RoomDatabase() {
-    abstract fun searchHistoryDao(): SearchHistoryDao
-    abstract fun UserSettingsDao(): UserSettingsDao
-}
+
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var searchHistoryDbInstance: AppDatabase
-    lateinit var userSettingsDbInstance: AppDatabase
+//    lateinit var searchHistoryDbInstance: AppDatabase
+    lateinit var searchHistoryDbInstance: SearchHistoryDatabase
+//    lateinit var userSettingsDbInstance: AppDatabase
+    lateinit var userSettingsDbInstance: UserSettingsDatabase
     lateinit var allRecipeData: ArrayList<RecipeData>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        Log.i("testSave", "initial user Settings" + UserSettings.toString())
 
         val searchBtn = findViewById<Button>(R.id.search_btn)
         val searchInput = findViewById<EditText>(R.id.search_input)
@@ -58,8 +56,20 @@ class MainActivity : AppCompatActivity() {
 //        }
 
         // Button onClick START
+        searchHistoryBtn.setOnClickListener {
+            startActivity(Intent(applicationContext, SearchHistoryActivity::class.java))
+            Log.i("testAct", "test search history")
+        }
+        settingsBtn.setOnClickListener {
+            startActivity(Intent(applicationContext, SettingsActivity::class.java))
+            Log.i("testAct", "test settings")
+        }
+
+
         searchBtn.setOnClickListener {
             GlobalScope.launch(Dispatchers.Main) {
+
+                Log.i("testSave", "user Settings" + UserSettings.toString())
 
                 userInput = searchInput.text.toString()
                 if (userInput != "") {
@@ -70,12 +80,12 @@ class MainActivity : AppCompatActivity() {
 //                { recipe ->
 //                    recipe.recipeMealType?.lowercase()?.contains(Settings.priority.lowercase())
 //                }
+                    // Sorting of downloaded data END
 
                     allRecipeData.forEach { recipe ->
                         Log.i("recipeTest", "recipeMealType: " + recipe.recipeMealType?.lowercase())
                         Log.i("recipeTest", "Settings: " + UserSettings.priority.lowercase())
-                        Log.i(
-                            "recipeTest",
+                        Log.i("recipeTest",
                             "BOOL: " + recipe.recipeMealType?.lowercase()
                                 ?.contains(UserSettings.priority.lowercase()) as Boolean
                         )
@@ -83,11 +93,9 @@ class MainActivity : AppCompatActivity() {
 //                        // Take only X first entries
 //                        val recipesToShow: ArrayList<RecipeData> =
 //                            ArrayList(allRecipeData.subList(0, UserSettings.maxShowItems).toList())
-
-
-                        // Sorting of downloaded data END
+                    }
                         addRecipeListToSearchHistoryDatabase(allRecipeData)
-                        setAdapter(recipeRecyclerView, allRecipeData, searchHistoryDbInstance, recipeRecyclerView)
+                        setAdapter(recipeRecyclerView, allRecipeData, searchHistoryDbInstance)
 
 //                        addRecipeListToSearchHistoryDatabase(recipesToShow)
 //
@@ -95,14 +103,8 @@ class MainActivity : AppCompatActivity() {
 //                            recipeRecyclerView,
 //                            recipesToShow, dbInstance, recipeRecyclerView
 //                        )
-                    }
+
                 }
-            }
-            searchHistoryBtn.setOnClickListener {
-                startActivity(Intent(applicationContext, SearchHistoryActivity::class.java))
-            }
-            settingsBtn.setOnClickListener {
-                startActivity(Intent(applicationContext, SettingsActivity::class.java))
             }
             // Button onclick END
 
@@ -117,7 +119,7 @@ class MainActivity : AppCompatActivity() {
 
 //        val typeConverter: Converters = Converters()
 
-        searchHistoryDbInstance = Room.databaseBuilder(this, AppDatabase::class.java, "SearchHistory").build()
+        searchHistoryDbInstance = Room.databaseBuilder(this, SearchHistoryDatabase::class.java, "SearchHistory").build()
 
         GlobalScope.launch(Dispatchers.IO) {
             recipeDataList.forEach { searchHistory ->
@@ -134,25 +136,14 @@ class MainActivity : AppCompatActivity() {
                 searchHistory.recipeDietLabels,
                 searchHistory.recipeCalories,
                 searchHistory.recipeIsFavorited,
-                searchHistory.recipeExternalWebsite)
+                searchHistory.recipeExternalWebsite
+                )
 
                 searchHistoryDbInstance.searchHistoryDao().addRecipe(newSearchHistoryItem)
 
-//                val newSearchHistoryItem = SearchHistory(
-//                    0,
-//                    imageByteArray,
-//                    searchHistory.recipeName,
-//                    searchHistory.recipeMealType,
-//                    searchHistory.recipeDietLabels,
-//                    searchHistory.recipeCalories,
-//                    searchHistory.recipeIsFavorited,
-//                    searchHistory.recipeExternalWebsite
-//                )
-//                dbInstance.searchHistoryDao().addRecipe(newSearchHistoryItem)
             }
 
         }
-        // DB TEST END
     }
 
     fun showStartupRecipes(data: ArrayList<RecipeData>) {
@@ -160,12 +151,7 @@ class MainActivity : AppCompatActivity() {
         // when the app first launches
     }
 
-    fun setAdapter(
-        view: RecyclerView,
-        data: ArrayList<RecipeData>,
-        dbInstance: AppDatabase,
-        Rv: RecyclerView
-    ) {
+    fun setAdapter(view: RecyclerView, data: ArrayList<RecipeData>, dbInstance: SearchHistoryDatabase) {
         val adapter = RecipeRowAdapter(data, dbInstance)
         val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(applicationContext)
         view.layoutManager = layoutManager
@@ -210,39 +196,36 @@ class MainActivity : AppCompatActivity() {
                 // For the report: mention why we create put the JSONArray in an ArrayList, and
                 // then set the ArrayList to the RecipeData recipeDietLabels and recipe MealType
                 // change so if statement checks the size of the array, not if its null
-                if (dietLabels != null) {
+
+                // (dietLabels != null)
+                if (dietLabels.length() > 0) {
                     for (i in 0 until dietLabels.length()) {
-                        if (dietLabels != null) {
-                            for (i in 0 until dietLabels.length()) {
-                                dietLabelsList.add(dietLabels.getString(i))
-                                Log.i("testArray", "Array: " + dietLabels.getString(i))
-                            }
-                        }
-                        if (mealType != null) {
-                            for (i in 0 until mealType.length()) {
-                                mealTypeList.add(mealType.getString(i))
-                            }
-                        }
-
-                        var recipeCalories = (recipe as JSONObject).getString("calories").toFloat()
-                        var recipeYield = (recipe as JSONObject).getString("yield").toFloat()
-
-                        dataItem.recipeExternalWebsite = (recipe as JSONObject).getString("url")
-                        dataItem.recipeDietLabels = dietLabelsList
-                        dataItem.recipeImage = recipeImage
-                        dataItem.recipeName = (recipe as JSONObject).getString("label")
-                        dataItem.recipeMealType = mealTypeList.get(0)
-                        dataItem.recipeCalories = recipeCalories / recipeYield
-                        allData.add(dataItem)
+                        dietLabelsList.add(dietLabels.getString(i))
+                        Log.i("testArray", "Array: " + dietLabels.getString(i))
                     }
-
                 }
+                // (mealType != null)
+                if (mealType.length() > 0) {
+                    for (i in 0 until mealType.length()) {
+                        mealTypeList.add(mealType.getString(i))
+                    }
+                }
+
+                var recipeCalories = (recipe as JSONObject).getString("calories").toFloat()
+                var recipeYield = (recipe as JSONObject).getString("yield").toFloat()
+
+                dataItem.recipeExternalWebsite = (recipe as JSONObject).getString("url")
+                dataItem.recipeDietLabels = dietLabelsList
+                dataItem.recipeImage = recipeImage
+                dataItem.recipeName = (recipe as JSONObject).getString("label")
+                dataItem.recipeMealType = mealTypeList.get(0)
+                dataItem.recipeCalories = recipeCalories / recipeYield
+                allData.add(dataItem)
 
                 allData.forEach { recipe ->
                     Log.i("testing", "test: " + recipe.recipeName)
-//            Log.i("testing", "test: " + recipe.yield)
+//                  Log.i("testing", "test: " + recipe.yield)
                 }
-
             }
         }.await()
         return allData

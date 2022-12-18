@@ -14,7 +14,8 @@ import kotlinx.coroutines.launch
 
 class SearchHistoryActivity : AppCompatActivity() {
 
-    lateinit var dbInstance: AppDatabase
+//    lateinit var dbInstance: AppDatabase
+    lateinit var dbInstance: SearchHistoryDatabase
     lateinit var searchHistoryDataList: List<SearchHistoryEntity>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,7 +27,7 @@ class SearchHistoryActivity : AppCompatActivity() {
         val brunchFilterBtn = findViewById<Button>(R.id.brunch_filter_btn)
         val dinnerFilterBtn = findViewById<Button>(R.id.dinner_filter_btn)
 
-        dbInstance = Room.databaseBuilder(this, AppDatabase::class.java, "SearchHistory").build()
+        dbInstance = Room.databaseBuilder(this, SearchHistoryDatabase::class.java, "SearchHistory").build()
 
         GlobalScope.launch(Dispatchers.IO) {
 
@@ -67,7 +68,7 @@ class SearchHistoryActivity : AppCompatActivity() {
 
     }
 
-    fun setAdapter(view: RecyclerView, data: List<SearchHistoryEntity>, dbInstance: AppDatabase){
+    fun setAdapter(view: RecyclerView, data: List<SearchHistoryEntity>, dbInstance: SearchHistoryDatabase){
 
         // Make setAdapter a global function to avoid repeating code?
 

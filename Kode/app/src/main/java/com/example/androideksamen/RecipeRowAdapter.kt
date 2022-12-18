@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 import kotlin.coroutines.coroutineContext
 import com.example.androideksamen.UserSettings.Settings
 
-class RecipeRowAdapter(val allData: ArrayList<RecipeData>, val dbInstance: AppDatabase) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class RecipeRowAdapter(val allData: ArrayList<RecipeData>, val dbInstance: SearchHistoryDatabase) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     inner class ViewHolder(val view: View): RecyclerView.ViewHolder(view)
 

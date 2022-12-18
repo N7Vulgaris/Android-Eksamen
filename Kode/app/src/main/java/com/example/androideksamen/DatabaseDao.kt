@@ -14,6 +14,7 @@ interface SearchHistoryDao{
 @Dao
 interface UserSettingsDao{
     @Insert fun addUserSettings(userSettings: UserSettingsEntity)
+    @Query("SELECT * FROM UserSettings") fun getAllUserSettings(): List<UserSettingsEntity>
     @Query("SELECT * FROM UserSettings WHERE id = :id") fun getUserSettings(id: Int): UserSettingsEntity
     @Query("UPDATE UserSettings SET dailyIntake = :dailyIntake, maxShowItems = :maxShowItems, " +
             "dietType = :dietType, dietMaxAmount = :dietMaxAmount, " +

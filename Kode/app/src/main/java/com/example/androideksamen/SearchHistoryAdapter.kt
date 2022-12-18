@@ -13,7 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class SearchHistoryAdapter(val allData: List<SearchHistoryEntity>, val dbInstance: AppDatabase) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class SearchHistoryAdapter(val allData: List<SearchHistoryEntity>, val dbInstance: SearchHistoryDatabase) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     inner class ViewHolder(val view: View): RecyclerView.ViewHolder(view)
 

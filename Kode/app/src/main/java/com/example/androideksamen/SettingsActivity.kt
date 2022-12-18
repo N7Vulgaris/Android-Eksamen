@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.*
+import androidx.core.view.get
 import androidx.room.Room
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -14,7 +15,8 @@ import kotlinx.coroutines.launch
 
 class SettingsActivity : AppCompatActivity() {
 
-    lateinit var userSettingsDbInstance: AppDatabase
+//    lateinit var userSettingsDbInstance: AppDatabase
+    lateinit var userSettingsDbInstance: UserSettingsDatabase
 
     // initialize UI obj
     @SuppressLint("SetTextI18n")
@@ -29,9 +31,18 @@ class SettingsActivity : AppCompatActivity() {
         val maxItems = findViewById<EditText>(R.id.maxitems)
         val dietMaxAmount = findViewById<EditText>(R.id.dietamount)
 
-        userSettingsDbInstance = Room.databaseBuilder(this, AppDatabase::class.java, "UserSettings").build()
+        userSettingsDbInstance = Room.databaseBuilder(this, UserSettingsDatabase::class.java, "UserSettings").build()
+        GlobalScope.launch(Dispatchers.IO) {
+            if(userSettingsDbInstance.UserSettingsDao().getAllUserSettings().isNotEmpty())
+            updateGlobalUserSettings(userSettingsDbInstance)
+        }
 
-        updateGlobalUserSettings(userSettingsDbInstance)
+//        GlobalScope.launch(Dispatchers.IO) {
+//            val newUserSettings = UserSettingsEntity(0, 2500f, 8, "Low-Calories", 50, "Dinner")
+//            userSettingsDbInstance.UserSettingsDao().addUserSettings(newUserSettings)
+//            userSettingsDbInstance.UserSettingsDao().getUserSettings(1)
+//        }
+
 
 //        saveBtn.setOnClickListener {
 //            updateGlobalUserSettings(userSettingsDbInstance)
@@ -40,7 +51,7 @@ class SettingsActivity : AppCompatActivity() {
 
 
 //            AdapterView.OnItemSelectedListener {
-        dietsSelector.adapter = createAdapter(UserSettings.dietTypes) // referred to in report
+        dietsSelector.adapter =  createAdapter(UserSettings.dietTypes) //referred to in report
         prioritySelector.adapter = createAdapter(UserSettings.priorities)
 
         //load in settings from global
@@ -52,19 +63,23 @@ class SettingsActivity : AppCompatActivity() {
 
         saveBtn.setOnClickListener {
             try {
-                UserSettings.maxShowItems = maxItems.text.toString().toInt()
+//                UserSettings.maxShowItems = maxItems.text.toString().toInt()
                 val tempIntake: Float? =
                     getFloatFromString(dailyIntake.text.toString())
                 val tempDietMax: Int? =
                     getIntFromString(dietMaxAmount.text.toString())
                 if (tempIntake != null && tempDietMax != null) {
-                    UserSettings.dailyIntake = tempIntake
-                    UserSettings.dietMaxAmount = tempDietMax
+//                    UserSettings.dailyIntake = tempIntake
+//                    UserSettings.dietMaxAmount = tempDietMax
+
                 } else {
                     throw java.lang.NumberFormatException("Some values are invalid")
                 }
-                UserSettings.setDietType(dietsSelector.selectedItemPosition)
-                UserSettings.setPriority(prioritySelector.selectedItemPosition)
+
+                setUserSettingsInDatabase(dailyIntake, maxItems, dietMaxAmount, dietsSelector, prioritySelector)
+
+//                UserSettings.setDietType(dietsSelector.selectedItemPosition)
+//                UserSettings.setPriority(prioritySelector.selectedItemPosition)
                 //  feedback to user?
                 Log.i(this.localClassName, "Settings saved $UserSettings")
                 startActivity(Intent(applicationContext, MainActivity::class.java))
@@ -109,15 +124,57 @@ class SettingsActivity : AppCompatActivity() {
         return numberString?.toInt()
     }
 
-    fun updateGlobalUserSettings(dbInstance: AppDatabase) {
+    fun updateGlobalUserSettings(dbInstance: UserSettingsDatabase) {
+        val newUserSettings = dbInstance.UserSettingsDao().getUserSettings(1)
+        UserSettings.dailyIntake = newUserSettings.dailyIntake
+        UserSettings.maxShowItems = newUserSettings.maxShowItems
+        UserSettings.dietType = newUserSettings.dietType
+        UserSettings.dietMaxAmount = newUserSettings.dietMaxAmount
+        UserSettings.priority = newUserSettings.mealPriority
+    }
+
+    fun setUserSettingsInDatabase(dailyIntake: EditText, maxItems: EditText, dietMaxAmount: EditText, dietType: Spinner, mealPriority: Spinner){
         GlobalScope.launch(Dispatchers.IO) {
-            val newUserSettings = dbInstance.UserSettingsDao().getUserSettings(1)
-            UserSettings.dailyIntake = newUserSettings.dailyIntake
-            UserSettings.maxShowItems = newUserSettings.maxShowItems
-            UserSettings.dietType = newUserSettings.dietType
-            UserSettings.dietMaxAmount = newUserSettings.dietMaxAmount
-            UserSettings.priority = newUserSettings.mealPriority
+            if (userSettingsDbInstance.UserSettingsDao().getAllUserSettings().isEmpty()) {
+                createNewUserSettingsInDatabase(dailyIntake, maxItems, dietMaxAmount, dietType, mealPriority)
+            } else {
+                // update existing user settings
+//                    val uptatedUserSettings = UserSettingsEntity(
+//                        0,
+//                        getFloatFromString(dailyIntake.text.toString())!!,
+//                        getIntFromString(maxItems.toString())!!,
+//                        "diet type - update",
+//                        getIntFromString(dietMaxAmount.text.toString())!!,
+//                        "meal priority - update"
+                updateUserSettingsInDatabase(dailyIntake, maxItems, dietMaxAmount, dietType, mealPriority)
+
+            }
+            updateGlobalUserSettings(userSettingsDbInstance)
         }
+    }
+
+    fun createNewUserSettingsInDatabase(dailyIntake: EditText, maxItems: EditText, dietMaxAmount: EditText, dietType: Spinner, mealPriority: Spinner){
+        // add new user settings
+        val newUserSettings = UserSettingsEntity(
+            0,
+            getFloatFromString(dailyIntake.text.toString())!!,
+            getIntFromString(maxItems.text.toString())!!,
+            dietType.selectedItem.toString(),
+            getIntFromString(dietMaxAmount.text.toString())!!,
+            mealPriority.selectedItem.toString()
+        )
+
+        userSettingsDbInstance.UserSettingsDao().addUserSettings(newUserSettings)
+    }
+
+    fun updateUserSettingsInDatabase(dailyIntake: EditText, maxItems: EditText, dietMaxAmount: EditText , dietType: Spinner, mealPriority: Spinner){
+        userSettingsDbInstance.UserSettingsDao().updateUserSettings(
+            getFloatFromString(dailyIntake.text.toString())!!,
+            getIntFromString(maxItems.text.toString())!!,
+            dietType.selectedItem.toString(),
+            getIntFromString(dietMaxAmount.text.toString())!!,
+            mealPriority.selectedItem.toString()
+        )
     }
 }
 
