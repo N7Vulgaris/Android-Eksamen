@@ -26,45 +26,63 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="88dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="80dp"
+        android:gravity="center"
         android:weightSum="100"
-        android:gravity="center">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <Button
             android:id="@+id/breakfast_filter_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="30"
-            android:text="Breakfast"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="40"
             android:backgroundTint="#D3D3D3"
+            android:text="Breakfast"
             android:textColor="@color/black" />
 
         <Button
             android:id="@+id/brunch_filter_btn"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="30"
-            android:text="Brunch"
+            android:layout_weight="40"
             android:backgroundTint="#D3D3D3"
+            android:text="Brunch"
             android:textColor="@color/black" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="120dp"
+        android:gravity="center"
+        android:weightSum="100"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <Button
             android:id="@+id/dinner_filter_btn"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="30"
-            android:text="Dinner"
+            android:layout_weight="40"
             android:backgroundTint="#D3D3D3"
+            android:text="Dinner"
             android:textColor="@color/black" />
 
+        <Button
+            android:id="@+id/sort_btn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="40"
+            android:backgroundTint="#D3D3D3"
+            android:text="Favorite"
+            android:textColor="@color/black" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/search_history_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="584dp"
+        android:layout_height="550dp"
         android:layout_marginBottom="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

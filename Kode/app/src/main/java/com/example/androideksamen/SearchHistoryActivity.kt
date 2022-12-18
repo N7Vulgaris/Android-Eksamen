@@ -26,44 +26,55 @@ class SearchHistoryActivity : AppCompatActivity() {
         val breakfastFilterBtn = findViewById<Button>(R.id.breakfast_filter_btn)
         val brunchFilterBtn = findViewById<Button>(R.id.brunch_filter_btn)
         val dinnerFilterBtn = findViewById<Button>(R.id.dinner_filter_btn)
+        val sortBtn = findViewById<Button>(R.id.sort_btn)
 
         dbInstance = Room.databaseBuilder(this, SearchHistoryDatabase::class.java, "SearchHistory").build()
+
 
         GlobalScope.launch(Dispatchers.IO) {
 
             searchHistoryDataList = dbInstance.searchHistoryDao().getAll()
 //            Log.i("testDb", "DB list: "+searchHistoryDataList)
 
-            if(searchHistoryDataList.isNotEmpty()) {
+            if (searchHistoryDataList.isNotEmpty()) {
                 GlobalScope.launch(Dispatchers.Main) {
+//                    val sortedSearchHistory = sortSearchHistoryByFavorited(searchHistoryDataList)
+//                    val sortedSearchHistory = sortSearchHistoryByFavorited(searchHistoryDataList)
                     setAdapter(searchHistoryRv, searchHistoryDataList, dbInstance)
                 }
             }
         }
 
+        sortBtn.setOnClickListener {
+            filterSearchHistoryByFavorited(searchHistoryRv)
+        }
+
         breakfastFilterBtn.setOnClickListener {
-            val filteredList = searchHistoryDataList.filter { dbItem -> dbItem.recipeMealType?.lowercase()?.contains(breakfastFilterBtn.text.toString().lowercase())!!}
-            if(filteredList.isNotEmpty()) {
-                GlobalScope.launch(Dispatchers.Main) {
-                    setAdapter(searchHistoryRv, filteredList, dbInstance)
-                }
-            }
+//            val filteredList = searchHistoryDataList.filter { dbItem -> dbItem.recipeMealType?.lowercase()?.contains(breakfastFilterBtn.text.toString().lowercase())!!}
+//            if(filteredList.isNotEmpty()) {
+//                GlobalScope.launch(Dispatchers.Main) {
+//                    setAdapter(searchHistoryRv, filteredList, dbInstance)
+//                }
+//            }
+            filterSearchHistoryByMealType(breakfastFilterBtn, searchHistoryRv)
         }
         brunchFilterBtn.setOnClickListener {
-            val filteredList = searchHistoryDataList.filter { dbItem -> dbItem.recipeMealType?.lowercase()?.contains(brunchFilterBtn.text.toString().lowercase())!!}
-            if(filteredList.isNotEmpty()) {
-                GlobalScope.launch(Dispatchers.Main) {
-                    setAdapter(searchHistoryRv, filteredList, dbInstance)
-                }
-            }
+//            val filteredList = searchHistoryDataList.filter { dbItem -> dbItem.recipeMealType?.lowercase()?.contains(brunchFilterBtn.text.toString().lowercase())!!}
+//            if(filteredList.isNotEmpty()) {
+//                GlobalScope.launch(Dispatchers.Main) {
+//                    setAdapter(searchHistoryRv, filteredList, dbInstance)
+//                }
+//            }
+            filterSearchHistoryByMealType(brunchFilterBtn, searchHistoryRv)
         }
         dinnerFilterBtn.setOnClickListener {
-            val filteredList = searchHistoryDataList.filter { dbItem -> dbItem.recipeMealType?.lowercase()?.contains(dinnerFilterBtn.text.toString().lowercase())!!}
-            if(filteredList.isNotEmpty()) {
-                GlobalScope.launch(Dispatchers.Main) {
-                    setAdapter(searchHistoryRv, filteredList, dbInstance)
-                }
-            }
+//            val filteredList = searchHistoryDataList.filter { dbItem -> dbItem.recipeMealType?.lowercase()?.contains(dinnerFilterBtn.text.toString().lowercase())!!}
+//            if(filteredList.isNotEmpty()) {
+//                GlobalScope.launch(Dispatchers.Main) {
+//                    setAdapter(searchHistoryRv, filteredList, dbInstance)
+//                }
+//            }
+            filterSearchHistoryByMealType(dinnerFilterBtn, searchHistoryRv)
         }
 
     }
@@ -71,11 +82,24 @@ class SearchHistoryActivity : AppCompatActivity() {
     fun setAdapter(view: RecyclerView, data: List<SearchHistoryEntity>, dbInstance: SearchHistoryDatabase){
 
         // Make setAdapter a global function to avoid repeating code?
-
         val adapter = SearchHistoryAdapter(data, dbInstance)
-        val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(applicationContext)
+        val layoutManager = LinearLayoutManager(this)
         view.layoutManager = layoutManager
         view.itemAnimator = DefaultItemAnimator()
         view.adapter = adapter
+    }
+
+    fun filterSearchHistoryByFavorited(searchHistoryRv: RecyclerView){
+        val searchHistory = searchHistoryDataList.filter { searchHistoryEntity -> searchHistoryEntity.recipeIsFavorited }
+        setAdapter(searchHistoryRv, searchHistory, dbInstance)
+    }
+
+    fun filterSearchHistoryByMealType(filterBtn: Button, searchHistoryRv: RecyclerView){
+        val filteredList = searchHistoryDataList.filter { dbItem -> dbItem.recipeMealType?.lowercase()?.contains(filterBtn.text.toString().lowercase())!!}
+        if(filteredList.isNotEmpty()) {
+            GlobalScope.launch(Dispatchers.Main) {
+                setAdapter(searchHistoryRv, filteredList, dbInstance)
+            }
+        }
     }
 }

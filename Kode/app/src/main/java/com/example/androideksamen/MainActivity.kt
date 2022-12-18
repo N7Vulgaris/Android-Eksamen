@@ -23,7 +23,8 @@ import java.net.URL
 
 // Global variable imports
 import java.io.ByteArrayOutputStream
-
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class MainActivity : AppCompatActivity() {
@@ -80,22 +81,19 @@ class MainActivity : AppCompatActivity() {
 //                { recipe ->
 //                    recipe.recipeMealType?.lowercase()?.contains(Settings.priority.lowercase())
 //                }
+
+                    sortRecipeDataByMealPriority(allRecipeData)
+//                    allRecipeData.forEach { recipe ->
+//
+////                        // Take only X first entries
+////                        val recipesToShow: ArrayList<RecipeData> =
+////                            ArrayList(allRecipeData.subList(0, UserSettings.maxShowItems).toList())
+//                    }
                     // Sorting of downloaded data END
 
-                    allRecipeData.forEach { recipe ->
-                        Log.i("recipeTest", "recipeMealType: " + recipe.recipeMealType?.lowercase())
-                        Log.i("recipeTest", "Settings: " + UserSettings.priority.lowercase())
-                        Log.i("recipeTest",
-                            "BOOL: " + recipe.recipeMealType?.lowercase()
-                                ?.contains(UserSettings.priority.lowercase()) as Boolean
-                        )
 
-//                        // Take only X first entries
-//                        val recipesToShow: ArrayList<RecipeData> =
-//                            ArrayList(allRecipeData.subList(0, UserSettings.maxShowItems).toList())
-                    }
-                        addRecipeListToSearchHistoryDatabase(allRecipeData)
-                        setAdapter(recipeRecyclerView, allRecipeData, searchHistoryDbInstance)
+                    addRecipeListToSearchHistoryDatabase(allRecipeData)
+                    setAdapter(recipeRecyclerView, allRecipeData, searchHistoryDbInstance)
 
 //                        addRecipeListToSearchHistoryDatabase(recipesToShow)
 //
@@ -229,6 +227,12 @@ class MainActivity : AppCompatActivity() {
             }
         }.await()
         return allData
+    }
+
+    fun sortRecipeDataByMealPriority(recipeData: ArrayList<RecipeData>){
+        recipeData.sortedBy { recipeData ->
+            recipeData.recipeName?.lowercase()?.contains(UserSettings.priority.lowercase())
+        }
     }
 
 //    suspend fun downloadRecipeImage(recipeData: ArrayList<RecipeData>): ArrayList<RecipeData>{
