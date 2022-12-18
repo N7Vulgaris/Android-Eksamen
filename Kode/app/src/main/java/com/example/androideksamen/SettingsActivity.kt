@@ -31,6 +31,7 @@ class SettingsActivity : AppCompatActivity() {
         val maxItems = findViewById<EditText>(R.id.maxitems)
         val dietMaxAmount = findViewById<EditText>(R.id.dietamount)
 
+        //referred to in report
         userSettingsDbInstance = Room.databaseBuilder(this, UserSettingsDatabase::class.java, "UserSettings").build()
         GlobalScope.launch(Dispatchers.IO) {
             if(userSettingsDbInstance.UserSettingsDao().getAllUserSettings().isNotEmpty())
@@ -49,9 +50,9 @@ class SettingsActivity : AppCompatActivity() {
 //            Log.i("testGlobal", "Settings after update onclick: " + UserSettings.toString())
 //        }
 
-
+                //referred to in report
 //            AdapterView.OnItemSelectedListener {
-        dietsSelector.adapter =  createAdapter(UserSettings.dietTypes) //referred to in report
+        dietsSelector.adapter =  createAdapter(UserSettings.dietTypes)
         prioritySelector.adapter = createAdapter(UserSettings.priorities)
 
         //load in settings from global
@@ -60,7 +61,7 @@ class SettingsActivity : AppCompatActivity() {
         dietMaxAmount.setText("${UserSettings.dietMaxAmount} g")
         dietsSelector.setSelection(UserSettings.getDietTypeIndex())
         prioritySelector.setSelection(UserSettings.getPriorityIndex())
-
+        //referred to in report
         saveBtn.setOnClickListener {
             try {
 //                UserSettings.maxShowItems = maxItems.text.toString().toInt()

@@ -4,6 +4,7 @@ import android.app.Application
 //Class for storing user settings for the application.
 //Contains an array of diet types, priorities, and preset initial settings.
 // Global variables
+//referred to in report
 class UserSettings: Application() {
     companion object Settings {
         //Standard options
