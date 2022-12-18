@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 class SearchHistoryActivity : AppCompatActivity() {
 
     lateinit var dbInstance: AppDatabase
-    lateinit var searchHistoryDataList: List<SearchHistory>
+    lateinit var searchHistoryDataList: List<SearchHistoryEntity>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,7 +67,7 @@ class SearchHistoryActivity : AppCompatActivity() {
 
     }
 
-    fun setAdapter(view: RecyclerView, data: List<SearchHistory>, dbInstance: AppDatabase){
+    fun setAdapter(view: RecyclerView, data: List<SearchHistoryEntity>, dbInstance: AppDatabase){
 
         // Make setAdapter a global function to avoid repeating code?
 

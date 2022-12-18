@@ -7,14 +7,13 @@ import android.net.Uri
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class SearchHistoryAdapter(val allData: List<SearchHistory>, val dbInstance: AppDatabase) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class SearchHistoryAdapter(val allData: List<SearchHistoryEntity>, val dbInstance: AppDatabase) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     inner class ViewHolder(val view: View): RecyclerView.ViewHolder(view)
 
@@ -31,7 +30,7 @@ class SearchHistoryAdapter(val allData: List<SearchHistory>, val dbInstance: App
 //        rowView.layoutParams.width = LinearLayout.LayoutParams.MATCH_PARENT
 //        rowView.layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT
 
-        rowView.setBackgroundColor(allData.get(position).recipeCalories, UserSettings.Settings.dailyIntake, rowView.selectRecipeBtn)
+        rowView.setBackgroundColor(allData.get(position).recipeCalories, UserSettings.globalDailyIntake, rowView.selectRecipeBtn)
 
         // Find a way to bypass null-asserted (!! after allData.get(position).recipeImage)
         val searchHistoryImage = BitmapFactory.decodeByteArray(allData.get(position).recipeImage, 0, allData.get(position).recipeImage!!.size)
@@ -52,11 +51,11 @@ class SearchHistoryAdapter(val allData: List<SearchHistory>, val dbInstance: App
         }
 
         rowView.selectRecipeBtn?.setOnClickListener {
-// Make math operation into its own function
-            if(allData.get(position).recipeCalories <= UserSettings.Settings.dailyIntake){
-                UserSettings.dailyIntake -= allData.get(position).recipeCalories
+        // Make math operation into its own function
+            if(allData.get(position).recipeCalories <= UserSettings.globalDailyIntake!!){
+                UserSettings.globalDailyIntake -= allData.get(position).recipeCalories
             }
-            rowView.setBackgroundColor(allData.get(position).recipeCalories, UserSettings.Settings.dailyIntake, rowView.selectRecipeBtn)
+            rowView.setBackgroundColor(allData.get(position).recipeCalories, UserSettings.globalDailyIntake, rowView.selectRecipeBtn)
         }
 
         rowView.changeFavoriteIcon(allData.get(position).recipeIsFavorited)
@@ -119,6 +118,6 @@ class SearchHistoryAdapter(val allData: List<SearchHistory>, val dbInstance: App
 
     override fun getItemCount(): Int {
 //        return allData.size
-        return UserSettings.maxShowItems
+        return UserSettings.globalMaxShowItems
     }
 }

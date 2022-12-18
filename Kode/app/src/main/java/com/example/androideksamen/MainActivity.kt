@@ -1,5 +1,6 @@
 package com.example.androideksamen
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -21,26 +22,21 @@ import org.json.JSONObject
 import java.net.URL
 
 // Global variable imports
-import com.example.androideksamen.UserSettings.Settings
 import java.io.ByteArrayOutputStream
 
-@Dao
-interface SearchHistoryDao{
-    @Insert fun addRecipe(recipe: SearchHistory)
-    @Query("SELECT * FROM SearchHistory") fun getAll(): List<SearchHistory>
-    @Query("UPDATE SearchHistory SET recipeIsFavorited = :isFavorited WHERE recipeName = :name") fun updateFavorited(isFavorited: Boolean, name: String?)
-}
 
-@Database(entities = [SearchHistory::class], version = 1)
+@Database(entities = [SearchHistoryEntity::class, UserSettingsEntity::class], version = 1)
 @TypeConverters(Converters::class)
 abstract class AppDatabase: RoomDatabase(){
     abstract fun searchHistoryDao(): SearchHistoryDao
+    abstract fun UserSettingsDao(): UserSettingsDao
 }
 
 class MainActivity : AppCompatActivity() {
 
 //    lateinit var allData: ArrayList<RecipeData>
-    lateinit var dbInstance: AppDatabase
+    lateinit var searchHistoryDbInstance: AppDatabase
+    lateinit var userSettingsDbInstance: AppDatabase
     lateinit var allRecipeData: ArrayList<RecipeData>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,7 +51,13 @@ class MainActivity : AppCompatActivity() {
         var userInput: String
 
         //Access to global settings variables here !!
-        println(Settings)
+//        println(Settings)
+
+        userSettingsDbInstance = Room.databaseBuilder(this, AppDatabase::class.java, "UserSettings").build()
+        GlobalScope.launch(Dispatchers.IO) {
+            val newUserSettings = UserSettingsEntity(0, 2500f, 8, "Low-Calories", 50, "Dinner")
+            userSettingsDbInstance.UserSettingsDao().addUserSettings(newUserSettings)
+        }
 
         // Button onClick START
         searchBtn.setOnClickListener{
@@ -73,12 +75,12 @@ class MainActivity : AppCompatActivity() {
 
                     allRecipeData.forEach { recipe->
                         Log.i("recipeTest", "recipeMealType: "+recipe.recipeMealType?.lowercase())
-                        Log.i("recipeTest", "Settings: "+Settings.priority.lowercase())
-                        Log.i("recipeTest", "BOOL: "+recipe.recipeMealType?.lowercase()?.contains(Settings.priority.lowercase()) as Boolean)
+                        Log.i("recipeTest", "Settings: "+UserSettings.globalMealPriority.lowercase())
+                        Log.i("recipeTest", "BOOL: "+recipe.recipeMealType?.lowercase()?.contains(UserSettings.globalMealPriority.lowercase()) as Boolean)
                     }
                     // Sorting of downloaded data END
                     addRecipeListToSearchHistoryDatabase(allRecipeData)
-                    setAdapter(recipeRecyclerView, allRecipeData, dbInstance, recipeRecyclerView)
+                    setAdapter(recipeRecyclerView, allRecipeData, searchHistoryDbInstance, recipeRecyclerView)
                 }
             }
         }
@@ -100,7 +102,7 @@ class MainActivity : AppCompatActivity() {
 
 //        val typeConverter: Converters = Converters()
 
-        dbInstance = Room.databaseBuilder(this, AppDatabase::class.java, "SearchHistory").build()
+        searchHistoryDbInstance = Room.databaseBuilder(this, AppDatabase::class.java, "SearchHistory").build()
 
         GlobalScope.launch(Dispatchers.IO) {
             recipeDataList.forEach { searchHistory ->
@@ -112,7 +114,7 @@ class MainActivity : AppCompatActivity() {
                 val imageByteArray = stream.toByteArray()
 
 
-                val newSearchHistoryItem = SearchHistory(0,
+                val newSearchHistoryItem = SearchHistoryEntity(0,
                 imageByteArray,
                 searchHistory.recipeName,
                 searchHistory.recipeMealType,
@@ -120,7 +122,7 @@ class MainActivity : AppCompatActivity() {
                 searchHistory.recipeCalories,
                 searchHistory.recipeIsFavorited,
                 searchHistory.recipeExternalWebsite)
-                dbInstance.searchHistoryDao().addRecipe(newSearchHistoryItem)
+                searchHistoryDbInstance.searchHistoryDao().addRecipe(newSearchHistoryItem)
             }
 
         }
@@ -174,6 +176,7 @@ class MainActivity : AppCompatActivity() {
                 // For the report: mention why we create put the JSONArray in an ArrayList, and
                 // then set the ArrayList to the RecipeData recipeDietLabels and recipe MealType
 
+                // change so if statement checks the size of the array, not if its null
                 if(dietLabels != null){
                     for (i in 0 until dietLabels.length()){
                         dietLabelsList.add(dietLabels.getString(i))

@@ -123,7 +123,7 @@ class CustomRecipeView: LinearLayout {
 
     fun setBackgroundColor(recipeCalories: Float?, maxDailyCalories: Float, btn: Button?){
         if (recipeCalories != null){
-            if(recipeCalories > maxDailyCalories){
+            if(recipeCalories > maxDailyCalories!!){
                 this.setBackgroundColor(Color.parseColor("#FFCCCB"))
                 btn?.isVisible = false
             }else{
