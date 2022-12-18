@@ -24,19 +24,6 @@ import java.net.URL
 // Global variable imports
 import java.io.ByteArrayOutputStream
 
-<<<<<<< HEAD
-=======
-@Dao
-interface SearchHistoryDao {
-    @Insert
-    fun addRecipe(recipe: SearchHistory)
-    @Query("SELECT * FROM SearchHistory")
-    fun getAll(): List<SearchHistory>
-    @Query("UPDATE SearchHistory SET recipeIsFavorited = :isFavorited WHERE recipeName = :name")
-    fun updateFavorited(isFavorited: Boolean, name: String?)
-}
->>>>>>> b839d6df26e4ab6be90fc3bfc57adc55e0ef310c
-
 @Database(entities = [SearchHistoryEntity::class, UserSettingsEntity::class], version = 1)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
@@ -46,14 +33,8 @@ abstract class AppDatabase : RoomDatabase() {
 
 class MainActivity : AppCompatActivity() {
 
-<<<<<<< HEAD
-//    lateinit var allData: ArrayList<RecipeData>
     lateinit var searchHistoryDbInstance: AppDatabase
     lateinit var userSettingsDbInstance: AppDatabase
-=======
-    //    lateinit var allData: ArrayList<RecipeData>
-    lateinit var dbInstance: AppDatabase
->>>>>>> b839d6df26e4ab6be90fc3bfc57adc55e0ef310c
     lateinit var allRecipeData: ArrayList<RecipeData>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,11 +51,11 @@ class MainActivity : AppCompatActivity() {
         //Access to global settings variables here !!
 //        println(Settings)
 
-        userSettingsDbInstance = Room.databaseBuilder(this, AppDatabase::class.java, "UserSettings").build()
-        GlobalScope.launch(Dispatchers.IO) {
-            val newUserSettings = UserSettingsEntity(0, 2500f, 8, "Low-Calories", 50, "Dinner")
-            userSettingsDbInstance.UserSettingsDao().addUserSettings(newUserSettings)
-        }
+//        userSettingsDbInstance = Room.databaseBuilder(this, AppDatabase::class.java, "UserSettings").build()
+//        GlobalScope.launch(Dispatchers.IO) {
+//            val newUserSettings = UserSettingsEntity(0, 2500f, 8, "Low-Calories", 50, "Dinner")
+//            userSettingsDbInstance.UserSettingsDao().addUserSettings(newUserSettings)
+//        }
 
         // Button onClick START
         searchBtn.setOnClickListener {
@@ -90,48 +71,42 @@ class MainActivity : AppCompatActivity() {
 //                    recipe.recipeMealType?.lowercase()?.contains(Settings.priority.lowercase())
 //                }
 
-<<<<<<< HEAD
-                    allRecipeData.forEach { recipe->
-                        Log.i("recipeTest", "recipeMealType: "+recipe.recipeMealType?.lowercase())
-                        Log.i("recipeTest", "Settings: "+UserSettings.globalMealPriority.lowercase())
-                        Log.i("recipeTest", "BOOL: "+recipe.recipeMealType?.lowercase()?.contains(UserSettings.globalMealPriority.lowercase()) as Boolean)
-=======
                     allRecipeData.forEach { recipe ->
                         Log.i("recipeTest", "recipeMealType: " + recipe.recipeMealType?.lowercase())
-                        Log.i("recipeTest", "Settings: " + Settings.priority.lowercase())
+                        Log.i("recipeTest", "Settings: " + UserSettings.priority.lowercase())
                         Log.i(
                             "recipeTest",
                             "BOOL: " + recipe.recipeMealType?.lowercase()
-                                ?.contains(Settings.priority.lowercase()) as Boolean
+                                ?.contains(UserSettings.priority.lowercase()) as Boolean
                         )
->>>>>>> b839d6df26e4ab6be90fc3bfc57adc55e0ef310c
-                    }
-                    // Take only X first entries
-                    val recipesToShow: ArrayList<RecipeData> =
-                        ArrayList(allRecipeData.subList(0, Settings.maxShowItems).toList())
-                    // Sorting of downloaded data END
-<<<<<<< HEAD
-                    addRecipeListToSearchHistoryDatabase(allRecipeData)
-                    setAdapter(recipeRecyclerView, allRecipeData, searchHistoryDbInstance, recipeRecyclerView)
-=======
-                    addRecipeListToSearchHistoryDatabase(recipesToShow)
 
-                    setAdapter(
-                        recipeRecyclerView,
-                        recipesToShow, dbInstance, recipeRecyclerView
-                    )
->>>>>>> b839d6df26e4ab6be90fc3bfc57adc55e0ef310c
+//                        // Take only X first entries
+//                        val recipesToShow: ArrayList<RecipeData> =
+//                            ArrayList(allRecipeData.subList(0, UserSettings.maxShowItems).toList())
+
+
+                        // Sorting of downloaded data END
+                        addRecipeListToSearchHistoryDatabase(allRecipeData)
+                        setAdapter(recipeRecyclerView, allRecipeData, searchHistoryDbInstance, recipeRecyclerView)
+
+//                        addRecipeListToSearchHistoryDatabase(recipesToShow)
+//
+//                        setAdapter(
+//                            recipeRecyclerView,
+//                            recipesToShow, dbInstance, recipeRecyclerView
+//                        )
+                    }
                 }
             }
-        }
-        searchHistoryBtn.setOnClickListener {
-            startActivity(Intent(applicationContext, SearchHistoryActivity::class.java))
-        }
-        settingsBtn.setOnClickListener {
-            startActivity(Intent(applicationContext, SettingsActivity::class.java))
-        }
-        // Button onclick END
+            searchHistoryBtn.setOnClickListener {
+                startActivity(Intent(applicationContext, SearchHistoryActivity::class.java))
+            }
+            settingsBtn.setOnClickListener {
+                startActivity(Intent(applicationContext, SettingsActivity::class.java))
+            }
+            // Button onclick END
 
+        }
     }
 
     fun addRecipeListToSearchHistoryDatabase(recipeDataList: ArrayList<RecipeData>) {
@@ -152,9 +127,6 @@ class MainActivity : AppCompatActivity() {
                 val searchHistoryImage = searchHistory.recipeImage
                 searchHistoryImage?.compress(Bitmap.CompressFormat.PNG, 90, stream)
                 val imageByteArray = stream.toByteArray()
-
-
-<<<<<<< HEAD
                 val newSearchHistoryItem = SearchHistoryEntity(0,
                 imageByteArray,
                 searchHistory.recipeName,
@@ -163,20 +135,20 @@ class MainActivity : AppCompatActivity() {
                 searchHistory.recipeCalories,
                 searchHistory.recipeIsFavorited,
                 searchHistory.recipeExternalWebsite)
+
                 searchHistoryDbInstance.searchHistoryDao().addRecipe(newSearchHistoryItem)
-=======
-                val newSearchHistoryItem = SearchHistory(
-                    0,
-                    imageByteArray,
-                    searchHistory.recipeName,
-                    searchHistory.recipeMealType,
-                    searchHistory.recipeDietLabels,
-                    searchHistory.recipeCalories,
-                    searchHistory.recipeIsFavorited,
-                    searchHistory.recipeExternalWebsite
-                )
-                dbInstance.searchHistoryDao().addRecipe(newSearchHistoryItem)
->>>>>>> b839d6df26e4ab6be90fc3bfc57adc55e0ef310c
+
+//                val newSearchHistoryItem = SearchHistory(
+//                    0,
+//                    imageByteArray,
+//                    searchHistory.recipeName,
+//                    searchHistory.recipeMealType,
+//                    searchHistory.recipeDietLabels,
+//                    searchHistory.recipeCalories,
+//                    searchHistory.recipeIsFavorited,
+//                    searchHistory.recipeExternalWebsite
+//                )
+//                dbInstance.searchHistoryDao().addRecipe(newSearchHistoryItem)
             }
 
         }
@@ -237,43 +209,42 @@ class MainActivity : AppCompatActivity() {
 
                 // For the report: mention why we create put the JSONArray in an ArrayList, and
                 // then set the ArrayList to the RecipeData recipeDietLabels and recipe MealType
-
-<<<<<<< HEAD
                 // change so if statement checks the size of the array, not if its null
-                if(dietLabels != null){
-                    for (i in 0 until dietLabels.length()){
-=======
                 if (dietLabels != null) {
                     for (i in 0 until dietLabels.length()) {
->>>>>>> b839d6df26e4ab6be90fc3bfc57adc55e0ef310c
-                        dietLabelsList.add(dietLabels.getString(i))
-                        Log.i("testArray", "Array: " + dietLabels.getString(i))
+                        if (dietLabels != null) {
+                            for (i in 0 until dietLabels.length()) {
+                                dietLabelsList.add(dietLabels.getString(i))
+                                Log.i("testArray", "Array: " + dietLabels.getString(i))
+                            }
+                        }
+                        if (mealType != null) {
+                            for (i in 0 until mealType.length()) {
+                                mealTypeList.add(mealType.getString(i))
+                            }
+                        }
+
+                        var recipeCalories = (recipe as JSONObject).getString("calories").toFloat()
+                        var recipeYield = (recipe as JSONObject).getString("yield").toFloat()
+
+                        dataItem.recipeExternalWebsite = (recipe as JSONObject).getString("url")
+                        dataItem.recipeDietLabels = dietLabelsList
+                        dataItem.recipeImage = recipeImage
+                        dataItem.recipeName = (recipe as JSONObject).getString("label")
+                        dataItem.recipeMealType = mealTypeList.get(0)
+                        dataItem.recipeCalories = recipeCalories / recipeYield
+                        allData.add(dataItem)
                     }
-                }
-                if (mealType != null) {
-                    for (i in 0 until mealType.length()) {
-                        mealTypeList.add(mealType.getString(i))
-                    }
+
                 }
 
-                var recipeCalories = (recipe as JSONObject).getString("calories").toFloat()
-                var recipeYield = (recipe as JSONObject).getString("yield").toFloat()
-
-                dataItem.recipeExternalWebsite = (recipe as JSONObject).getString("url")
-                dataItem.recipeDietLabels = dietLabelsList
-                dataItem.recipeImage = recipeImage
-                dataItem.recipeName = (recipe as JSONObject).getString("label")
-                dataItem.recipeMealType = mealTypeList.get(0)
-                dataItem.recipeCalories = recipeCalories / recipeYield
-                allData.add(dataItem)
-            }
-
-        }.await()
-
-        allData.forEach { recipe ->
-            Log.i("testing", "test: " + recipe.recipeName)
+                allData.forEach { recipe ->
+                    Log.i("testing", "test: " + recipe.recipeName)
 //            Log.i("testing", "test: " + recipe.yield)
-        }
+                }
+
+            }
+        }.await()
         return allData
     }
 

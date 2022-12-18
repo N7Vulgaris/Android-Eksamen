@@ -31,7 +31,7 @@ class SearchHistoryActivity : AppCompatActivity() {
         GlobalScope.launch(Dispatchers.IO) {
 
             searchHistoryDataList = dbInstance.searchHistoryDao().getAll()
-            Log.i("testDb", "DB list: "+searchHistoryDataList)
+//            Log.i("testDb", "DB list: "+searchHistoryDataList)
 
             if(searchHistoryDataList.isNotEmpty()) {
                 GlobalScope.launch(Dispatchers.Main) {

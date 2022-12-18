@@ -41,42 +41,42 @@ import kotlinx.coroutines.launch
 //}
 
 
-class UserSettingsYa: Application() {
-
-//    var dbInstace: AppDatabase = Room.databaseBuilder()
-
-    companion object Settings {
-        //Standard options
-        val dietTypes = arrayOf("Low Carb", "Low Calorie", "Low Fat", "Atkins")
-        val priorities = arrayOf("Breakfast","Lunch","Dinner")
-
-        //Initial settings values
-        var globalDailyIntake: Float = 0f
-        var globalMaxShowItems: Int = 0
-        var globalDietType: String = ""
-        var globalDietMaxAmount: Int = 0
-        var globalMealPriority: String = ""
-
-        override fun toString(): String {
-            return "Settings{"+ globalDailyIntake+","+
-                    globalMaxShowItems+","+
-                    globalDietType+","+
-                    globalDietMaxAmount+","+
-                    globalMealPriority+"}"
-        }
-    }
-
-    override fun onCreate() {
-        super.onCreate()
-        // initialization code here
-//        var setting: UserSettingsEntity
+//class UserSettingsYa: Application() {
 //
-//        GlobalScope.launch(Dispatchers.IO) {
-//            val userSettings = dbInstace.UserSettingsDao().getUserSettings(1)
+////    var dbInstace: AppDatabase = Room.databaseBuilder()
 //
-////            setting = UserSettingsEntity(0, userSettings.dailyIntake, userSettings.maxShowItems, userSettings.dietType, userSettings.dietMaxAmount, userSettings.mealPriority)
-//            setting = userSettings
-//            globalDailyIntake = setting.dailyIntake
+//    companion object Settings {
+//        //Standard options
+//        val dietTypes = arrayOf("Low Carb", "Low Calorie", "Low Fat", "Atkins")
+//        val priorities = arrayOf("Breakfast","Lunch","Dinner")
+//
+//        //Initial settings values
+//        var globalDailyIntake: Float = 0f
+//        var globalMaxShowItems: Int = 0
+//        var globalDietType: String = ""
+//        var globalDietMaxAmount: Int = 0
+//        var globalMealPriority: String = ""
+//
+//        override fun toString(): String {
+//            return "Settings{"+ globalDailyIntake+","+
+//                    globalMaxShowItems+","+
+//                    globalDietType+","+
+//                    globalDietMaxAmount+","+
+//                    globalMealPriority+"}"
 //        }
-    }
-}
+//    }
+//
+//    override fun onCreate() {
+//        super.onCreate()
+//        // initialization code here
+////        var setting: UserSettingsEntity
+////
+////        GlobalScope.launch(Dispatchers.IO) {
+////            val userSettings = dbInstace.UserSettingsDao().getUserSettings(1)
+////
+//////            setting = UserSettingsEntity(0, userSettings.dailyIntake, userSettings.maxShowItems, userSettings.dietType, userSettings.dietMaxAmount, userSettings.mealPriority)
+////            setting = userSettings
+////            globalDailyIntake = setting.dailyIntake
+////        }
+//    }
+//}

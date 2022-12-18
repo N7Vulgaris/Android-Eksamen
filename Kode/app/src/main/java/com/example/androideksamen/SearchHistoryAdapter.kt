@@ -30,7 +30,7 @@ class SearchHistoryAdapter(val allData: List<SearchHistoryEntity>, val dbInstanc
 //        rowView.layoutParams.width = LinearLayout.LayoutParams.MATCH_PARENT
 //        rowView.layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT
 
-        rowView.setBackgroundColor(allData.get(position).recipeCalories, UserSettings.globalDailyIntake, rowView.selectRecipeBtn)
+        rowView.setBackgroundColor(allData.get(position).recipeCalories, UserSettings.dailyIntake, rowView.selectRecipeBtn)
 
         // Find a way to bypass null-asserted (!! after allData.get(position).recipeImage)
         val searchHistoryImage = BitmapFactory.decodeByteArray(allData.get(position).recipeImage, 0, allData.get(position).recipeImage!!.size)
@@ -52,10 +52,10 @@ class SearchHistoryAdapter(val allData: List<SearchHistoryEntity>, val dbInstanc
 
         rowView.selectRecipeBtn?.setOnClickListener {
         // Make math operation into its own function
-            if(allData.get(position).recipeCalories <= UserSettings.globalDailyIntake!!){
-                UserSettings.globalDailyIntake -= allData.get(position).recipeCalories
+            if(allData.get(position).recipeCalories <= UserSettings.dailyIntake!!){
+                UserSettings.dailyIntake -= allData.get(position).recipeCalories
             }
-            rowView.setBackgroundColor(allData.get(position).recipeCalories, UserSettings.globalDailyIntake, rowView.selectRecipeBtn)
+            rowView.setBackgroundColor(allData.get(position).recipeCalories, UserSettings.dailyIntake, rowView.selectRecipeBtn)
         }
 
         rowView.changeFavoriteIcon(allData.get(position).recipeIsFavorited)
@@ -118,6 +118,6 @@ class SearchHistoryAdapter(val allData: List<SearchHistoryEntity>, val dbInstanc
 
     override fun getItemCount(): Int {
 //        return allData.size
-        return UserSettings.globalMaxShowItems
+        return UserSettings.maxShowItems
     }
 }

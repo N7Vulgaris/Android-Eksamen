@@ -16,6 +16,9 @@
         android:theme="@style/Theme.AndroidEksamen"
         tools:targetApi="31">
         <activity
+            android:name=".MainActivityTest"
+            android:exported="false" />
+        <activity
             android:name=".SettingsActivity"
             android:exported="false" />
         <activity
