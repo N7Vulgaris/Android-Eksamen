@@ -24,19 +24,36 @@ import java.net.URL
 // Global variable imports
 import java.io.ByteArrayOutputStream
 
+<<<<<<< HEAD
+=======
+@Dao
+interface SearchHistoryDao {
+    @Insert
+    fun addRecipe(recipe: SearchHistory)
+    @Query("SELECT * FROM SearchHistory")
+    fun getAll(): List<SearchHistory>
+    @Query("UPDATE SearchHistory SET recipeIsFavorited = :isFavorited WHERE recipeName = :name")
+    fun updateFavorited(isFavorited: Boolean, name: String?)
+}
+>>>>>>> b839d6df26e4ab6be90fc3bfc57adc55e0ef310c
 
 @Database(entities = [SearchHistoryEntity::class, UserSettingsEntity::class], version = 1)
 @TypeConverters(Converters::class)
-abstract class AppDatabase: RoomDatabase(){
+abstract class AppDatabase : RoomDatabase() {
     abstract fun searchHistoryDao(): SearchHistoryDao
     abstract fun UserSettingsDao(): UserSettingsDao
 }
 
 class MainActivity : AppCompatActivity() {
 
+<<<<<<< HEAD
 //    lateinit var allData: ArrayList<RecipeData>
     lateinit var searchHistoryDbInstance: AppDatabase
     lateinit var userSettingsDbInstance: AppDatabase
+=======
+    //    lateinit var allData: ArrayList<RecipeData>
+    lateinit var dbInstance: AppDatabase
+>>>>>>> b839d6df26e4ab6be90fc3bfc57adc55e0ef310c
     lateinit var allRecipeData: ArrayList<RecipeData>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,11 +77,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Button onClick START
-        searchBtn.setOnClickListener{
+        searchBtn.setOnClickListener {
             GlobalScope.launch(Dispatchers.Main) {
 
                 userInput = searchInput.text.toString()
-                if(userInput != ""){
+                if (userInput != "") {
 
                     allRecipeData = downloadRecipes(userInput)
 
@@ -73,14 +90,37 @@ class MainActivity : AppCompatActivity() {
 //                    recipe.recipeMealType?.lowercase()?.contains(Settings.priority.lowercase())
 //                }
 
+<<<<<<< HEAD
                     allRecipeData.forEach { recipe->
                         Log.i("recipeTest", "recipeMealType: "+recipe.recipeMealType?.lowercase())
                         Log.i("recipeTest", "Settings: "+UserSettings.globalMealPriority.lowercase())
                         Log.i("recipeTest", "BOOL: "+recipe.recipeMealType?.lowercase()?.contains(UserSettings.globalMealPriority.lowercase()) as Boolean)
+=======
+                    allRecipeData.forEach { recipe ->
+                        Log.i("recipeTest", "recipeMealType: " + recipe.recipeMealType?.lowercase())
+                        Log.i("recipeTest", "Settings: " + Settings.priority.lowercase())
+                        Log.i(
+                            "recipeTest",
+                            "BOOL: " + recipe.recipeMealType?.lowercase()
+                                ?.contains(Settings.priority.lowercase()) as Boolean
+                        )
+>>>>>>> b839d6df26e4ab6be90fc3bfc57adc55e0ef310c
                     }
+                    // Take only X first entries
+                    val recipesToShow: ArrayList<RecipeData> =
+                        ArrayList(allRecipeData.subList(0, Settings.maxShowItems).toList())
                     // Sorting of downloaded data END
+<<<<<<< HEAD
                     addRecipeListToSearchHistoryDatabase(allRecipeData)
                     setAdapter(recipeRecyclerView, allRecipeData, searchHistoryDbInstance, recipeRecyclerView)
+=======
+                    addRecipeListToSearchHistoryDatabase(recipesToShow)
+
+                    setAdapter(
+                        recipeRecyclerView,
+                        recipesToShow, dbInstance, recipeRecyclerView
+                    )
+>>>>>>> b839d6df26e4ab6be90fc3bfc57adc55e0ef310c
                 }
             }
         }
@@ -94,7 +134,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun addRecipeListToSearchHistoryDatabase(recipeDataList: ArrayList<RecipeData>){
+    fun addRecipeListToSearchHistoryDatabase(recipeDataList: ArrayList<RecipeData>) {
         // First create a search history database, then create the functionality
         // to add search results to the database
         // DB TEST START - Remember to switch back properties from the RecipeData class to the
@@ -114,6 +154,7 @@ class MainActivity : AppCompatActivity() {
                 val imageByteArray = stream.toByteArray()
 
 
+<<<<<<< HEAD
                 val newSearchHistoryItem = SearchHistoryEntity(0,
                 imageByteArray,
                 searchHistory.recipeName,
@@ -123,18 +164,36 @@ class MainActivity : AppCompatActivity() {
                 searchHistory.recipeIsFavorited,
                 searchHistory.recipeExternalWebsite)
                 searchHistoryDbInstance.searchHistoryDao().addRecipe(newSearchHistoryItem)
+=======
+                val newSearchHistoryItem = SearchHistory(
+                    0,
+                    imageByteArray,
+                    searchHistory.recipeName,
+                    searchHistory.recipeMealType,
+                    searchHistory.recipeDietLabels,
+                    searchHistory.recipeCalories,
+                    searchHistory.recipeIsFavorited,
+                    searchHistory.recipeExternalWebsite
+                )
+                dbInstance.searchHistoryDao().addRecipe(newSearchHistoryItem)
+>>>>>>> b839d6df26e4ab6be90fc3bfc57adc55e0ef310c
             }
 
         }
         // DB TEST END
     }
 
-    fun showStartupRecipes(data: ArrayList<RecipeData>){
+    fun showStartupRecipes(data: ArrayList<RecipeData>) {
         // Function to show 10 random recipes depending on the time of day (dinner, breakfast etc)
         // when the app first launches
     }
 
-    fun setAdapter(view: RecyclerView, data: ArrayList<RecipeData>, dbInstance: AppDatabase, Rv: RecyclerView){
+    fun setAdapter(
+        view: RecyclerView,
+        data: ArrayList<RecipeData>,
+        dbInstance: AppDatabase,
+        Rv: RecyclerView
+    ) {
         val adapter = RecipeRowAdapter(data, dbInstance)
         val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(applicationContext)
         view.layoutManager = layoutManager
@@ -142,7 +201,8 @@ class MainActivity : AppCompatActivity() {
         view.adapter = adapter
     }
 
-    suspend fun downloadRecipes(userInput: String): ArrayList<RecipeData>{
+
+    suspend fun downloadRecipes(userInput: String): ArrayList<RecipeData> {
 
         val apiId: String = "2a4625b1"
         val apiKey: String = "ba6e08d3cf44ce2e3e826635508ed960"
@@ -150,7 +210,9 @@ class MainActivity : AppCompatActivity() {
 
         val allData = ArrayList<RecipeData>()
         GlobalScope.async {
-            val assetData = URL("https://api.edamam.com/api/recipes/v2?type=public&q=${userInput}&app_id=${apiId}&app_key=${apiKey}").readText().toString()
+            val assetData =
+                URL("https://api.edamam.com/api/recipes/v2?type=public&q=${userInput}&app_id=${apiId}&app_key=${apiKey}").readText()
+                    .toString()
             val recipeDataArray = (JSONObject(assetData).get("hits") as JSONArray)
             (0 until recipeDataArray.length()).forEach { recipeNr ->
                 val dataItem = RecipeData()
@@ -176,15 +238,20 @@ class MainActivity : AppCompatActivity() {
                 // For the report: mention why we create put the JSONArray in an ArrayList, and
                 // then set the ArrayList to the RecipeData recipeDietLabels and recipe MealType
 
+<<<<<<< HEAD
                 // change so if statement checks the size of the array, not if its null
                 if(dietLabels != null){
                     for (i in 0 until dietLabels.length()){
+=======
+                if (dietLabels != null) {
+                    for (i in 0 until dietLabels.length()) {
+>>>>>>> b839d6df26e4ab6be90fc3bfc57adc55e0ef310c
                         dietLabelsList.add(dietLabels.getString(i))
-                        Log.i("testArray", "Array: "+dietLabels.getString(i))
+                        Log.i("testArray", "Array: " + dietLabels.getString(i))
                     }
                 }
-                if(mealType != null){
-                    for (i in 0 until mealType.length()){
+                if (mealType != null) {
+                    for (i in 0 until mealType.length()) {
                         mealTypeList.add(mealType.getString(i))
                     }
                 }
