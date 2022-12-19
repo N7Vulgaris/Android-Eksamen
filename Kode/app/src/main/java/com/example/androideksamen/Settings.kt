@@ -26,14 +26,6 @@ class UserSettings: Application() {
             return priorities.indexOf(priority)
         }
 
-        fun setDietType(position: Int) {
-            Settings.dietType = Settings.dietTypes[position]
-        }
-
-        fun setPriority(position: Int) {
-            Settings.priority = Settings.priorities[position]
-        }
-
         override fun toString(): String {
             return "Settings{"+ dailyIntake+","+
                     maxShowItems+","+
@@ -45,6 +37,5 @@ class UserSettings: Application() {
 
     override fun onCreate() {
         super.onCreate()
-        // initialization code here
     }
 }

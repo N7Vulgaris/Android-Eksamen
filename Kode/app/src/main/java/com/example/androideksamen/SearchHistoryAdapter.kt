@@ -13,7 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class SearchHistoryAdapter(val allData: List<SearchHistoryEntity>, val dbInstance: SearchHistoryDatabase) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class SearchHistoryAdapter(val allData: List<SearchHistoryEntity>, val dbInstance: AppDatabase) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     inner class ViewHolder(val view: View): RecyclerView.ViewHolder(view)
 
@@ -26,16 +26,8 @@ class SearchHistoryAdapter(val allData: List<SearchHistoryEntity>, val dbInstanc
         val rowView = (holder.itemView as CustomRecipeView)
         rowView.setPadding(0, 50, 0, 0)
 
-//        rowView.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-//        rowView.layoutParams.width = LinearLayout.LayoutParams.MATCH_PARENT
-//        rowView.layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT
-
         rowView.setBackgroundColor(allData.get(position).recipeCalories, UserSettings.dailyIntake, rowView.selectRecipeBtn)
-
-        // Find a way to bypass null-asserted (!! after allData.get(position).recipeImage)
         val searchHistoryImage = BitmapFactory.decodeByteArray(allData.get(position).recipeImage, 0, allData.get(position).recipeImage!!.size)
-
-//        rowView.recipeFavorite.setImageDrawable(res.drawable)
 
         rowView.recipeFavorite?.setOnClickListener {
             if (!allData.get(position).recipeIsFavorited){
@@ -43,18 +35,13 @@ class SearchHistoryAdapter(val allData: List<SearchHistoryEntity>, val dbInstanc
             }else if(allData.get(position).recipeIsFavorited){
                 allData.get(position).recipeIsFavorited = false
             }
-            val btnBool = allData.get(position).recipeIsFavorited
-            Log.i("testBool", "button favotite:" + btnBool)
 
             rowView.changeFavoriteIcon(allData.get(position).recipeIsFavorited)
             updateItemInDb(allData.get(position).recipeIsFavorited, allData.get(position).recipeName)
         }
 
         rowView.selectRecipeBtn?.setOnClickListener {
-        // Make math operation into its own function
-            if(allData.get(position).recipeCalories <= UserSettings.dailyIntake!!){
-                UserSettings.dailyIntake -= allData.get(position).recipeCalories
-            }
+            UserSettings.dailyIntake -= allData.get(position).recipeCalories
             rowView.setBackgroundColor(allData.get(position).recipeCalories, UserSettings.dailyIntake, rowView.selectRecipeBtn)
         }
 
@@ -66,24 +53,17 @@ class SearchHistoryAdapter(val allData: List<SearchHistoryEntity>, val dbInstanc
 
         rowView.setRecipeMealType(allData.get(position).recipeMealType)
 
+        // Referred to in report (Reference x)
         rowView.recipeName?.setOnClickListener {
             goToExternalRecipeWebsite(allData.get(position).recipeExternalWebsite, rowView.context)
         }
+        // Referred to in report (Reference x)
         rowView.recipeImage?.setOnClickListener {
             goToExternalRecipeWebsite(allData.get(position).recipeExternalWebsite, rowView.context)
         }
 
-
-//        (0 until allData.get(position).recipeDietLabels.size).forEach { label ->
-//            val txt: TextView = TextView(rowView.context)
-//            txt.setText(allData.get(position).recipeDietLabels[label])
-//            txt.setTextSize(15f)
-//            Log.i("testArray", "from adapter: " + txt.text)
-//            rowView.linear2.addView(txt)
-//        }
-
+        // Referred to in report (Reference x)
         for (i in 0 until allData.get(position).recipeDietLabels.size){
-            Log.i("testArray", "test size : "+ allData.get(position).recipeDietLabels.size)
             val txtView = TextView(rowView.context)
             txtView.setText(allData.get(position).recipeDietLabels[i])
             txtView.setTextSize(15f)
@@ -91,19 +71,11 @@ class SearchHistoryAdapter(val allData: List<SearchHistoryEntity>, val dbInstanc
             txtView.isSingleLine = false
             txtView.maxLines = 2
             txtView.setLines(2)
-//            txtView.setBackgroundColor(Color.GRAY)
             rowView.linear2.addView(txtView)
         }
-
-//        rowView.setRecipeDietLabels1(allData.get(position).recipeDietLabels.get(0))
-
-//        Log.i("testArray", "in adapter: "+allData.get(position).recipeDietLabels.get(0))
-//
-//        rowView.setRecipeDietLabels2(allData.get(position).recipeDietLabels.get(1))
-//
-//        Log.i("testArray", "in adapter: "+allData.get(position).recipeDietLabels.get(1))
-
     }
+
+    // Referred to in report (Reference x)
     fun updateItemInDb(favorited: Boolean, name: String?){
         GlobalScope.launch(Dispatchers.IO) {
             dbInstance.searchHistoryDao().updateFavorited(favorited, name)
@@ -116,8 +88,12 @@ class SearchHistoryAdapter(val allData: List<SearchHistoryEntity>, val dbInstanc
         context.startActivity(externalWebsiteIntent)
     }
 
+    // Referred to in report (Reference x)
     override fun getItemCount(): Int {
-//        return allData.size
-        return UserSettings.maxShowItems
+        return if(UserSettings.maxShowItems > allData.size){
+            allData.size
+        }else{
+            UserSettings.maxShowItems
+        }
     }
 }

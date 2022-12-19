@@ -3,13 +3,8 @@ package com.example.androideksamen
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.graphics.drawable.Drawable
-import android.media.Image
-import android.util.Log
 import android.view.ViewGroup
 import android.widget.*
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.view.isVisible
 
 class CustomRecipeView: LinearLayout {
@@ -19,8 +14,6 @@ class CustomRecipeView: LinearLayout {
     var selectRecipeBtn: Button? = null
     var recipeMealType: TextView? = null
     var recipeFavorite: ImageView? = null
-//    var recipeDietLabels1: TextView? = null
-//    var recipeDietLabels2: TextView? = null
     lateinit var linear1: LinearLayout
     lateinit var linear2: LinearLayout
     lateinit var linear3: LinearLayout
@@ -32,10 +25,6 @@ class CustomRecipeView: LinearLayout {
         recipeMealType = TextView(context)
         recipeFavorite = ImageView(context)
 
-//        this.weightSum = 100f
-//        val lp: LayoutParams = LinearLayout.LayoutParams(0,100)
-//        recipeDietLabels1 = TextView(context)
-//        recipeDietLabels2 = TextView(context)
         linear1 = LinearLayout(context)
         linear2 = LinearLayout(context)
         linear3 = LinearLayout(context)
@@ -44,8 +33,6 @@ class CustomRecipeView: LinearLayout {
         linear1.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
         linear2.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
         linear3.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
-//        this.layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT
-//        this.layoutParams.width = LinearLayout.LayoutParams.MATCH_PARENT
 
         this.setPadding(0, 0, 0 ,30)
         this.orientation = LinearLayout.VERTICAL
@@ -53,48 +40,25 @@ class CustomRecipeView: LinearLayout {
         linear2.orientation = LinearLayout.HORIZONTAL
         linear3.orientation = LinearLayout.HORIZONTAL
 
-        // LinearLayout1
-        // Recipe Image
-
-        // Recipe Name
         recipeName?.textSize = 20f
-//        recipeName?.isSingleLine = false
-//        recipeName?.setLines(2)
-//        recipeName?.maxLines = 3
         recipeName?.layoutParams = LinearLayout.LayoutParams(500,ViewGroup.LayoutParams.MATCH_PARENT)
-
-        // Recipe Favorite Icon
 
         linear1.addView(recipeImage)
         linear1.addView(recipeName)
         linear1.addView(recipeFavorite)
 
-        // LinearLayout2
-
-        // Recipe Meal Type
         recipeMealType?.setPadding(5, 0, 5, 0)
         recipeMealType?.setTextSize(15f)
-        // Recipe Diet Labels
-//        recipeDietLabels1?.setTextSize(15f)
-//        recipeDietLabels2?.setTextSize(15f)
-
 
         linear2.addView(recipeMealType)
 
-        // LinearLayout3
-        // Recipe Select Button
         selectRecipeBtn?.text = "Select"
         selectRecipeBtn?.width = 100
         selectRecipeBtn?.height = ViewGroup.LayoutParams.MATCH_PARENT
-        selectRecipeBtn?.setOnClickListener {
-            Log.i("btn test", "TEST BUTTON WOO!")
-        }
 
         linear3.addView(selectRecipeBtn)
 
-//        linear2.addView(recipeDietLabels1)
-//        linear2.addView(recipeDietLabels2)
-
+        // Referred to in report (reference x)
         addView(linear1)
         addView(linear2)
         addView(linear3)
@@ -121,6 +85,7 @@ class CustomRecipeView: LinearLayout {
 
     }
 
+    // Referred to in report (Reference x)
     fun setBackgroundColor(recipeCalories: Float?, maxDailyCalories: Float, btn: Button?){
         if (recipeCalories != null){
             if(recipeCalories > maxDailyCalories!!){
@@ -131,13 +96,4 @@ class CustomRecipeView: LinearLayout {
             }
         }
     }
-
-    fun setRecipeDietLabels1(dietLabels: String?){
-//        recipeDietLabels1?.setText(dietLabels)
-    }
-
-    fun setRecipeDietLabels2(dietLabels: String?){
-//        recipeDietLabels2?.setText(dietLabels)
-    }
-
 }

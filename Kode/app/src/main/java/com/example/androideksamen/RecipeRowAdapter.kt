@@ -3,7 +3,6 @@ package com.example.androideksamen
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -12,10 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-import kotlin.coroutines.coroutineContext
-import com.example.androideksamen.UserSettings.Settings
-
-class RecipeRowAdapter(val allData: ArrayList<RecipeData>, val dbInstance: SearchHistoryDatabase) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class RecipeRowAdapter(val allData: ArrayList<RecipeData>, val dbInstance: AppDatabase) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     inner class ViewHolder(val view: View): RecyclerView.ViewHolder(view)
 
@@ -26,12 +22,8 @@ class RecipeRowAdapter(val allData: ArrayList<RecipeData>, val dbInstance: Searc
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder,position: Int) {
         val rowView = (holder.itemView as CustomRecipeView)
-
         rowView.setPadding(0, 50, 0, 0)
-
-
         rowView.setBackgroundColor(allData.get(position).recipeCalories, UserSettings.dailyIntake, rowView.selectRecipeBtn)
-//        rowView.setBackgroundColor(allData.get(position).recipeCalories, Settings.dailyIntake, rowView.selectRecipeBtn)
 
         rowView.recipeFavorite?.setOnClickListener {
             if (allData.get(position).recipeIsFavorited == false){
@@ -39,20 +31,13 @@ class RecipeRowAdapter(val allData: ArrayList<RecipeData>, val dbInstance: Searc
             }else if(allData.get(position).recipeIsFavorited == true){
                 allData.get(position).recipeIsFavorited = false
             }
-            val btnBool = allData.get(position).recipeIsFavorited
-            Log.i("testBool", "button favotite:" + btnBool)
-
             rowView.changeFavoriteIcon(allData.get(position).recipeIsFavorited)
             updateItemInDb(allData.get(position).recipeIsFavorited, allData.get(position).recipeName)
         }
 
         rowView.selectRecipeBtn?.setOnClickListener {
-            // Make math operation into its own function
             UserSettings.dailyIntake -= allData.get(position).recipeCalories
             rowView.setBackgroundColor(allData.get(position).recipeCalories, UserSettings.dailyIntake, rowView.selectRecipeBtn)
-
-//            Settings.dailyIntake -= allData.get(position).recipeCalories
-//            rowView.setBackgroundColor(allData.get(position).recipeCalories, Settings.dailyIntake, rowView.selectRecipeBtn)
         }
 
         rowView.changeFavoriteIcon(allData.get(position).recipeIsFavorited)
@@ -63,24 +48,17 @@ class RecipeRowAdapter(val allData: ArrayList<RecipeData>, val dbInstance: Searc
 
         rowView.setRecipeMealType(allData.get(position).recipeMealType)
 
+        // Referred to in report (Reference x)
         rowView.recipeName?.setOnClickListener {
             goToExternalRecipeWebsite(allData.get(position).recipeExternalWebsite, rowView.context)
         }
+        // Referred to in report (Reference x)
         rowView.recipeImage?.setOnClickListener {
             goToExternalRecipeWebsite(allData.get(position).recipeExternalWebsite, rowView.context)
         }
 
-
-//        (0 until allData.get(position).recipeDietLabels.size).forEach { label ->
-//            val txt: TextView = TextView(rowView.context)
-//            txt.setText(allData.get(position).recipeDietLabels[label])
-//            txt.setTextSize(15f)
-//            Log.i("testArray", "from adapter: " + txt.text)
-//            rowView.linear2.addView(txt)
-//        }
-
+        // Referred to in report (Reference x)
         for (i in 0 until allData.get(position).recipeDietLabels.size){
-            Log.i("testArray", "test size : "+ allData.get(position).recipeDietLabels.size)
             val txtView = TextView(rowView.context)
             txtView.setText(allData.get(position).recipeDietLabels[i])
             txtView.setTextSize(15f)
@@ -88,19 +66,10 @@ class RecipeRowAdapter(val allData: ArrayList<RecipeData>, val dbInstance: Searc
             txtView.isSingleLine = false
             txtView.maxLines = 2
             txtView.setLines(2)
-//            txtView.setBackgroundColor(Color.GRAY)
             rowView.linear2.addView(txtView)
         }
-
-//        rowView.setRecipeDietLabels1(allData.get(position).recipeDietLabels.get(0))
-
-//        Log.i("testArray", "in adapter: "+allData.get(position).recipeDietLabels.get(0))
-//
-//        rowView.setRecipeDietLabels2(allData.get(position).recipeDietLabels.get(1))
-//
-//        Log.i("testArray", "in adapter: "+allData.get(position).recipeDietLabels.get(1))
-
     }
+
     fun updateItemInDb(favorited: Boolean, name: String?){
         GlobalScope.launch(Dispatchers.IO) {
             dbInstance.searchHistoryDao().updateFavorited(favorited, name)
@@ -116,5 +85,4 @@ class RecipeRowAdapter(val allData: ArrayList<RecipeData>, val dbInstance: Searc
     override fun getItemCount(): Int {
         return allData.size
     }
-
 }

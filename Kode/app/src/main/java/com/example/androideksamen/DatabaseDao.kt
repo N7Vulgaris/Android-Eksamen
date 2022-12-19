@@ -11,6 +11,7 @@ interface SearchHistoryDao{
     @Query("UPDATE SearchHistory SET recipeIsFavorited = :isFavorited WHERE recipeName = :name") fun updateFavorited(isFavorited: Boolean, name: String?)
 }
 
+// Referred to in report (Reference x)
 @Dao
 interface UserSettingsDao{
     @Insert fun addUserSettings(userSettings: UserSettingsEntity)
