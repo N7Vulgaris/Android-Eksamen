@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.net.Uri
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -13,7 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class SearchHistoryAdapter(val allData: List<SearchHistoryEntity>, val dbInstance: AppDatabase) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class SearchHistoryAdapter(val allData: List<SearchHistoryEntity>, val searchHistoryDbIntance: AppDatabase) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     inner class ViewHolder(val view: View): RecyclerView.ViewHolder(view)
 
@@ -78,7 +77,7 @@ class SearchHistoryAdapter(val allData: List<SearchHistoryEntity>, val dbInstanc
     // Referred to in report (Reference x)
     fun updateItemInDb(favorited: Boolean, name: String?){
         GlobalScope.launch(Dispatchers.IO) {
-            dbInstance.searchHistoryDao().updateFavorited(favorited, name)
+            searchHistoryDbIntance.searchHistoryDao().updateFavorited(favorited, name)
         }
     }
 

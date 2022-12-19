@@ -11,7 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class RecipeRowAdapter(val allData: ArrayList<RecipeData>, val dbInstance: AppDatabase) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class RecipeRowAdapter(val allData: ArrayList<RecipeData>, val searchHistoryDbIntance: AppDatabase) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     inner class ViewHolder(val view: View): RecyclerView.ViewHolder(view)
 
@@ -72,7 +72,7 @@ class RecipeRowAdapter(val allData: ArrayList<RecipeData>, val dbInstance: AppDa
 
     fun updateItemInDb(favorited: Boolean, name: String?){
         GlobalScope.launch(Dispatchers.IO) {
-            dbInstance.searchHistoryDao().updateFavorited(favorited, name)
+            searchHistoryDbIntance.searchHistoryDao().updateFavorited(favorited, name)
         }
     }
 
