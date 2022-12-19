@@ -4,7 +4,7 @@ import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
-// Referred to in report (Reference x)
+// Referred to in report (Reference 8)
 class Converters {
 
     @TypeConverter

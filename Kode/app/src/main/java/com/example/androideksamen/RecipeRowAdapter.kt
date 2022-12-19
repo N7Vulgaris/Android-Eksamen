@@ -48,25 +48,23 @@ class RecipeRowAdapter(val allData: ArrayList<RecipeData>, val searchHistoryDbIn
 
         rowView.setRecipeMealType(allData.get(position).recipeMealType)
 
-        // Referred to in report (Reference x)
         rowView.recipeName?.setOnClickListener {
             goToExternalRecipeWebsite(allData.get(position).recipeExternalWebsite, rowView.context)
         }
-        // Referred to in report (Reference x)
         rowView.recipeImage?.setOnClickListener {
             goToExternalRecipeWebsite(allData.get(position).recipeExternalWebsite, rowView.context)
         }
 
-        // Referred to in report (Reference x)
+        // Referred to in report (Reference 14)
         for (i in 0 until allData.get(position).recipeDietLabels.size){
-            val txtView = TextView(rowView.context)
-            txtView.setText(allData.get(position).recipeDietLabels[i])
-            txtView.setTextSize(15f)
-            txtView.setPadding(0, 0, 5, 0,)
-            txtView.isSingleLine = false
-            txtView.maxLines = 2
-            txtView.setLines(2)
-            rowView.linear2.addView(txtView)
+            val dietLabelsTxtView = TextView(rowView.context)
+            dietLabelsTxtView.setText(allData.get(position).recipeDietLabels[i])
+            dietLabelsTxtView.setTextSize(15f)
+            dietLabelsTxtView.setPadding(0, 0, 5, 0,)
+            dietLabelsTxtView.isSingleLine = false
+            dietLabelsTxtView.maxLines = 2
+            dietLabelsTxtView.setLines(2)
+            rowView.linear2.addView(dietLabelsTxtView)
         }
     }
 

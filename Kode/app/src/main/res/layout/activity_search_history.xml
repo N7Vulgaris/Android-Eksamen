@@ -7,7 +7,7 @@
     tools:context=".SearchHistoryActivity">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/search_history_title"
         android:layout_width="326dp"
         android:layout_height="50dp"
         android:textAlignment="center"
@@ -70,7 +70,7 @@
             android:textColor="@color/black" />
 
         <Button
-            android:id="@+id/sort_btn"
+            android:id="@+id/favorite_filter_btn"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="40"

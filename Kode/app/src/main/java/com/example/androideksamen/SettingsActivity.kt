@@ -16,7 +16,6 @@ class SettingsActivity : AppCompatActivity() {
     lateinit var userSettingsDbInstance: AppDatabase
 
     // initialize UI obj
-    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
@@ -28,18 +27,17 @@ class SettingsActivity : AppCompatActivity() {
         val maxItems = findViewById<EditText>(R.id.maxitems)
         val dietMaxAmount = findViewById<EditText>(R.id.dietamount)
 
-        // Referred to in report (Reference x)
+        // Referred to in report (Reference 5)
         userSettingsDbInstance = Room.databaseBuilder(this, AppDatabase::class.java, "AppDatabase").build()
         setInitialUserSettings(userSettingsDbInstance)
 
-        // Referred to in report (Reference x)
+        // Referred to in report (Reference 10)
         dietsSelector.adapter =  createAdapter(UserSettings.dietTypes)
         prioritySelector.adapter = createAdapter(UserSettings.priorities)
 
-        //load in settings from global
         updateUiElementsFromUserSettings(dailyIntake, maxItems, dietMaxAmount, dietsSelector, prioritySelector)
 
-        // Referred to in report (Reference x)
+        // Referred to in report (Reference 11)
         saveBtn.setOnClickListener {
             setUserSettingsInDatabase(dailyIntake, maxItems, dietMaxAmount, dietsSelector, prioritySelector)
             startActivity(Intent(applicationContext, MainActivity::class.java))
@@ -68,6 +66,8 @@ class SettingsActivity : AppCompatActivity() {
         return numberString?.toInt()
     }
 
+    // Referred to in report (Reference 4)
+    @SuppressLint("SetTextI18n")
     fun updateUiElementsFromUserSettings(dailyIntake: EditText, maxItems: EditText, dietMaxAmount: EditText, dietsSelector: Spinner, prioritySelector: Spinner){
         dailyIntake.setText(String.format("%.1f", UserSettings.dailyIntake) + " cal")
         maxItems.setText("${UserSettings.maxShowItems}")
@@ -76,6 +76,7 @@ class SettingsActivity : AppCompatActivity() {
         prioritySelector.setSelection(UserSettings.getPriorityIndex())
     }
 
+    // Referred to in report (Reference 4)
     fun updateGlobalUserSettings(dbInstance: AppDatabase) {
         val newUserSettings = dbInstance.UserSettingsDao().getUserSettings(1)
         UserSettings.dailyIntake = newUserSettings.dailyIntake
@@ -85,6 +86,7 @@ class SettingsActivity : AppCompatActivity() {
         UserSettings.priority = newUserSettings.mealPriority
     }
 
+    // Referred to in report (Reference 4 and 15)
     fun setUserSettingsInDatabase(dailyIntake: EditText, maxItems: EditText, dietMaxAmount: EditText, dietType: Spinner, mealPriority: Spinner){
         GlobalScope.launch(Dispatchers.IO) {
             if (userSettingsDbInstance.UserSettingsDao().getAllUserSettings().isEmpty()) {

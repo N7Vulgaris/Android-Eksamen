@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.core.view.isVisible
 
+// Referred to in report (reference 17)
 class CustomRecipeView: LinearLayout {
 
     var recipeImage: ImageView? = null
@@ -58,7 +59,6 @@ class CustomRecipeView: LinearLayout {
 
         linear3.addView(selectRecipeBtn)
 
-        // Referred to in report (reference x)
         addView(linear1)
         addView(linear2)
         addView(linear3)
@@ -85,7 +85,7 @@ class CustomRecipeView: LinearLayout {
 
     }
 
-    // Referred to in report (Reference x)
+    // Referred to in report (Reference 18)
     fun setBackgroundColor(recipeCalories: Float?, maxDailyCalories: Float, btn: Button?){
         if (recipeCalories != null){
             if(recipeCalories > maxDailyCalories!!){

@@ -24,9 +24,10 @@ class SearchHistoryActivity : AppCompatActivity() {
         val breakfastFilterBtn = findViewById<Button>(R.id.breakfast_filter_btn)
         val brunchFilterBtn = findViewById<Button>(R.id.brunch_filter_btn)
         val dinnerFilterBtn = findViewById<Button>(R.id.dinner_filter_btn)
-        val sortBtn = findViewById<Button>(R.id.sort_btn)
+        // Referred to in report (Reference 2)
+        val favoriteFilterBtn = findViewById<Button>(R.id.favorite_filter_btn)
 
-        // Referred to in report (Reference x)
+        // Referred to in report (Reference 5)
         searchHistoryDbInstance = Room.databaseBuilder(this, AppDatabase::class.java, "AppDatabase").build()
 
 
@@ -41,10 +42,11 @@ class SearchHistoryActivity : AppCompatActivity() {
             }
         }
 
-        sortBtn.setOnClickListener {
+        favoriteFilterBtn.setOnClickListener {
             filterSearchHistoryByFavorited(searchHistoryRv)
         }
 
+        // Referred to in report (Reference 13)
         breakfastFilterBtn.setOnClickListener {
             filterSearchHistoryByMealType(breakfastFilterBtn, searchHistoryRv)
         }
@@ -74,7 +76,7 @@ class SearchHistoryActivity : AppCompatActivity() {
         }
     }
 
-    // Referred to in report (Reference x)
+    // Referred to in report (Reference 13)
     fun filterSearchHistoryByMealType(filterBtn: Button, searchHistoryRv: RecyclerView){
         val filteredList = searchHistoryDataList.filter { dbItem -> dbItem.recipeMealType?.lowercase()?.contains(filterBtn.text.toString().lowercase())!!}
         if(filteredList.isNotEmpty()) {

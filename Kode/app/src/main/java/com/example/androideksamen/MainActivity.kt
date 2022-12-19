@@ -28,6 +28,7 @@ import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
 
+    // Referred to in report (Reference 1)
     lateinit var searchHistoryDbInstance: AppDatabase
     lateinit var allRecipeData: ArrayList<RecipeData>
 
@@ -64,15 +65,17 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // Referred to in report (Reference 3)
     fun addRecipeListToSearchHistoryDatabase(recipeDataList: ArrayList<RecipeData>) {
 
-        // Referred to in report (Reference x)
+        // Referred to in report (Reference 5)
         searchHistoryDbInstance = Room.databaseBuilder(this, AppDatabase::class.java, "AppDatabase").build()
 
         GlobalScope.launch(Dispatchers.IO) {
             recipeDataList.forEach { searchHistory ->
 
-                // Encode Bitmap image to ByteArray
+
+                // Referred to in report (Reference 7)
                 val stream = ByteArrayOutputStream()
                 val searchHistoryImage = searchHistory.recipeImage
                 searchHistoryImage?.compress(Bitmap.CompressFormat.PNG, 90, stream)
@@ -90,7 +93,6 @@ class MainActivity : AppCompatActivity() {
                 searchHistoryDbInstance.searchHistoryDao().addRecipe(newSearchHistoryItem)
 
             }
-
         }
     }
 
@@ -127,7 +129,7 @@ class MainActivity : AppCompatActivity() {
 
                 val dietLabels: JSONArray = (recipe as JSONObject).get("dietLabels") as JSONArray
                 val mealType: JSONArray = (recipe as JSONObject).get("mealType") as JSONArray
-                // Referred to in report (Reference x)
+                // Referred to in report (Reference 6)
                 val dietLabelsList: ArrayList<String> = ArrayList<String>()
                 val mealTypeList: ArrayList<String> = ArrayList<String>()
 
@@ -142,7 +144,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
-                // Referred to in report (Reference x)
+                // Referred to in report (Reference 9)
                 var recipeCalories = (recipe as JSONObject).getString("calories").toFloat()
                 var recipeYield = (recipe as JSONObject).getString("yield").toFloat()
 
